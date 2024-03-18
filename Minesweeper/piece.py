@@ -1,43 +1,43 @@
 class Piece:
     # States: Not clicked, clicked, flagged
-    def __init__(self, hasBomb):
-        self.hasBomb = hasBomb
+    def __init__(self, has_bomb):
+        self.has_bomb = has_bomb
         self.around = 0
         self.clicked = False
         self.flagged = False
         self.neighbors = []
 
     def __str__(self):
-        return str(self.hasBomb)
+        return str(self.has_bomb)
 
-    def getNumAround(self):
+    def get_num_around(self):
         return self.around
 
-    def getHasBomb(self):
-        return self.hasBomb
+    def get_has_bomb(self):
+        return self.has_bomb
 
-    def getClicked(self):
+    def get_clicked(self):
         return self.clicked
 
-    def getFlagged(self):
+    def get_flagged(self):
         return self.flagged
 
-    def toggleFlag(self):
+    def toggle_flag(self):
         self.flagged = not self.flagged
 
-    def handleClick(self):
+    def handle_click(self):
         self.clicked = True
 
-    def setNumAround(self):
+    def set_num_around(self):
         num = 0
         for neighbor in self.neighbors:
-            if neighbor.getHasBomb():
+            if neighbor.get_has_bomb():
                 num += 1
         self.around = num
 
-    def setNeighbors(self, neighbors):
+    def set_neighbors(self, neighbors):
         self.neighbors = neighbors
         
-    def getNeighbors(self):
+    def get_neighbors(self):
         return self.neighbors
  

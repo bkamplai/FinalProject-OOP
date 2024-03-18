@@ -1,7 +1,8 @@
 import random
 from piece import Piece
+
 class Board:
-    def __init__(self, size, prob):
+    def __init__(self, size, mine_count):
         self.size = size
         self.board = []
         self.won = False 
@@ -9,65 +10,65 @@ class Board:
         for row in range(size[0]):
             row = []
             for col in range(size[1]):
-                bomb = random.random() < prob
+                bomb = random.random() < mine_count #going away to replace with IO
                 piece = Piece(bomb)
                 row.append(piece)
             self.board.append(row)
-        self.setNeighbors()
-        self.setNumAround()
+        self.set_neighbors()
+        self.set_num_around()
 
-    def print(self):
+    def print_board(self):
         for row in self.board:
             for piece in row:
                 print(piece, end=" ")
             print()
 
-    def getBoard(self):
+    def get_board(self):
         return self.board
 
-    def getSize(self):
+    def get_size(self):
         return self.size
     
-    def getPiece(self, index):
+    def get_piece(self, index):
         return self.board[index[0]][index[1]]
 
-    def handleClick(self, piece, flag):
-        if piece.getClicked() or (piece.getFlagged() and not flag):
+    def handle_click(self, piece, flag):
+        if piece.get_clicked() or (piece.get_flagged() and not flag):
             return
         if flag:
-            piece.toggleFlag()
+            piece.toggle_flag()
             return
-        piece.handleClick()
-        if piece.getNumAround() == 0:
-            for neighbor in piece.getNeighbors():
-                self.handleClick(neighbor, False)
-        if piece.getHasBomb():
+        piece.handle_click()
+        if piece.get_num_around() == 0:
+            for neighbor in piece.get_neighbors():
+                self.handle_click(neighbor, False)
+        if piece.get_has_bomb():
             self.lost = True
         else:
-            self.won = self.checkWon()
+            self.won = self.check_won()
     
-    def checkWon(self):
+    def check_won(self):
         for row in self.board:
             for piece in row:
-                if not piece.getHasBomb() and not piece.getClicked():
+                if not piece.get_has_bomb() and not piece.get_clicked():
                     return False
         return True
 
-    def getWon(self):
+    def get_won(self):
         return self.won
 
-    def getLost(self):
+    def get_lost(self):
         return self.lost
 
-    def setNeighbors(self):
+    def set_neighbors(self):
         for row in range(len(self.board)):
             for col in range(len(self.board[0])):
                 piece = self.board[row][col]
                 neighbors = []
-                self.addToNeighborsList(neighbors, row, col)
-                piece.setNeighbors(neighbors)
+                self.add_to_neighbors_list(neighbors, row, col)
+                piece.set_neighbors(neighbors)
     
-    def addToNeighborsList(self, neighbors, row, col):
+    def add_to_neighbors_list(self, neighbors, row, col):
         for r in range(row - 1, row + 2):
             for c in range(col - 1, col + 2):
                 if r == row and c == col:
@@ -76,9 +77,9 @@ class Board:
                     continue
                 neighbors.append(self.board[r][c])
     
-    def setNumAround(self):
+    def set_num_around(self):
         for row in self.board:
             for piece in row:
-                piece.setNumAround()
+                piece.set_num_around()
         
         

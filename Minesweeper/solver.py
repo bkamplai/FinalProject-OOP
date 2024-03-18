@@ -5,31 +5,31 @@ class Solver:
         self.board = board
 
     def move(self):
-        for row in self.board.getBoard():
+        for row in self.board.get_board():
             for piece in row:
-                if not piece.getClicked():
+                if not piece.get_clicked():
                     continue
-                around = piece.getNumAround()
+                around = piece.get_num_around()
                 unknown = 0
                 flagged = 0
-                neighbors = piece.getNeighbors()
+                neighbors = piece.get_neighbors()
                 for p in neighbors:
-                    if not p.getClicked():
+                    if not p.get_clicked():
                         unknown += 1
-                    if p.getFlagged():
+                    if p.get_flagged():
                         flagged += 1
                 if around == flagged:
-                    self.openUnflagged(neighbors)
+                    self.open_unflagged(neighbors)
                 if around == unknown:
-                    self.flagAll(neighbors)
+                    self.flag_all(neighbors)
 
-    def openUnflagged(self, neighbors):
+    def open_unflagged(self, neighbors):
         for piece in neighbors:
-            if not piece.getFlagged():
-                self.board.handleClick(piece, False)
+            if not piece.get_flagged():
+                self.board.handle_click(piece, False)
 
 
-    def flagAll(self, neighbors):
+    def flag_all(self, neighbors):
         for piece in neighbors:
-            if not piece.getFlagged():
-                self.board.handleClick(piece, True)
+            if not piece.get_flagged():
+                self.board.handle_click(piece, True)
