@@ -1,10 +1,10 @@
 import pyautogui
 
 class Solver:
-    def __init__(self, board):
+    def __init__(self, board) -> None:
         self.board = board
 
-    def move(self):
+    def move(self) -> None:
         for row in self.board.get_board():
             for piece in row:
                 if not piece.get_clicked():
@@ -23,13 +23,13 @@ class Solver:
                 if around == unknown:
                     self.flag_all(neighbors)
 
-    def open_unflagged(self, neighbors):
+    def open_unflagged(self, neighbors) -> None:
         for piece in neighbors:
             if not piece.get_flagged():
                 self.board.handle_click(piece, False)
 
 
-    def flag_all(self, neighbors):
+    def flag_all(self, neighbors) -> None:
         for piece in neighbors:
             if not piece.get_flagged():
                 self.board.handle_click(piece, True)
