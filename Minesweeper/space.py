@@ -1,4 +1,4 @@
-class Piece:
+class Space:
     # States: Not clicked, clicked, flagged
     def __init__(self, has_bomb):
         self.has_bomb = has_bomb

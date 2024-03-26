@@ -1,5 +1,5 @@
 import random
-from piece import Piece
+from space import Space
 
 class Board:
     def __init__(self, size, mine_count):
@@ -11,7 +11,7 @@ class Board:
             row = []
             for col in range(size[1]):
                 bomb = random.random() < mine_count #going away to replace with IO
-                piece = Piece(bomb)
+                piece = Space(bomb)
                 row.append(piece)
             self.board.append(row)
         self.set_neighbors()
