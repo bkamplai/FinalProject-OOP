@@ -7,15 +7,30 @@ class Board:
         self.board = []
         self.won = False 
         self.lost = False
+        self.initialized = False
         for row in range(size[0]):
             row = []
             for col in range(size[1]):
-                bomb = random.random() < mine_count #going away to replace with IO
-                piece = Space(bomb)
+                #bomb = random.random() < mine_count #going away to replace with IO
+                #piece = Space(bomb)
+                piece = Space(False) # Initialzie with no mines
                 row.append(piece)
             self.board.append(row)
         self.set_neighbors()
         self.set_num_around()
+
+    def initialize_mines(self, positions):
+        # Reset mine settings
+        for row in self.board:
+            for piece in row:
+                piece.contains_mine = False
+        # Set mines at given positions
+        for position in positions:
+            self.get_piece(position).contains_mine = True
+        # Call set up methods
+        self.set_neighbors()
+        self.set_num_around()
+        self.initialized = True
 
     def print_board(self):
         for row in self.board:

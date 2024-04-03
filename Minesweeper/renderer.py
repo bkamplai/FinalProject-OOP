@@ -3,15 +3,21 @@ import os
 from typing import Dict
 
 class Renderer:
-    def __init__(self, screen_size, piece_size) -> None: #reference code
+    def __init__(self, grid_size, piece_size, extra_height=100) -> None: #reference code
         pygame.init()
-        self.screen = pygame.display.set_mode(screen_size)
+        pygame.font.init() # initalize the font module
+        self.piece_size = piece_size
+        self.screen_size = (grid_size[0] * piece_size[0], grid_size[1] * piece_size[1] + extra_height)
+        self.extra_height = extra_height
+        self.screen = pygame.display.set_mode(self.screen_size)
+
         #load images here!
         #self.sizeScreen = 800, 800
         #self.screen = pygame.display.set_mode(self.sizeScreen)
         #self.pieceSize = (self.sizeScreen[0] / size[1], self.sizeScreen[1] / size[0]) 
-        self.piece_size = piece_size
+        
         self.assets = self.load_assets()
+        self.font = pygame.font.Font(None, 36)
         #self.loadPictures()
 
     def load_assets(self) -> Dict[str,pygame.Surface]: # reference code
@@ -53,4 +59,14 @@ class Renderer:
         return 'empty-block'
 
     def update_display(self) -> None:
+        #self.screen.fill((0, 0, 0))
         pygame.display.flip()
+    
+    def clear_screen(self):
+        self.screen.fill((0, 0, 0))
+
+    def display_message(self, text, position):
+        text_surface = self.font.render(text, True, (255, 255, 255))
+        text_rect = text_surface.get_rect(center=(self.screen.get_width() / 2, 10)) # get rectangle of text surface and center
+        self.screen.blit(text_surface, text_rect) # Draw text on screen
+        pygame.display.update(text_rect)
