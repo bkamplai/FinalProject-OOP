@@ -15,6 +15,12 @@ class Game:
         self.expected_mine_count = mine_count # expected num of mines to place
         self.show_message = True
         self.state = InitializingState(self)
+        self.initial_draw()
+
+    def initial_draw(self):
+        # draw the initial state of the game
+        self.state.update()
+        self.renderer.update_display()
 
     def change_state(self, new_state):
         self.state.exit()
@@ -30,62 +36,30 @@ class Game:
         running = True
         while running:
             self.renderer.clear_screen()
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    self.state.handle_click(pygame.mouse.get_pos())
-                    #if not self.board.initialized:
-                        # User is still placing mines
-                        #position = self.convert_pixel_to_grid(pygame.mouse.get_pos())
-                        #if position not in self.mine_positions: # prevent duplicate mines
-                            #self.mine_positions.append(position)
-                            #if len(self.mine_positions) < self.expected_mine_count:
-                                # Update message with new remaining mine value
-                                #mines_left = self.expected_mine_count - len(self.mine_positions)
-                                #self.renderer.display_message(f"Place your mines. Mines left: {mines_left}", (100, 100))
-                                #pass
-                            #else:
-                                # All mines placed, initialize the board and start the game
-                                #self.board.initialize_mines(self.mine_positions)
-                                #self.board.initialized = True
-                                #self.renderer.display_message("All mines placed. Starting game...", (100, 100))
-                                #pygame.time.wait(2000) # Wait 2 sec before starting
-                            #self.show_message = False
-                    #elif not (self.board.get_won() or self.board.get_lost()):
-                        #rightClick = pygame.mouse.get_pressed(num_buttons=3)[2]
-                        #self.handleClick(pygame.mouse.get_pos(), rightClick)
-                #if event.type == pygame.MOUSEBUTTONDOWN and not (self.board.get_won() or self.board.get_lost()):
-                    #rightClick = pygame.mouse.get_pressed(num_buttons=3)[2]
-                    #self.handleClick(pygame.mouse.get_pos(), rightClick)
-                
+                    self.state.handle_click(pygame.mouse.get_pos())                
                 elif event.type == pygame.KEYDOWN:
                     if self.board.initialized and not self.board.get_lost():
                         self.solver.move()
-            
-            if self.board.initialized:
-                self.renderer.draw_board(self.board)
 
             if self.show_message:
                 mines_left = self.expected_mine_count - len(self.mine_positions)
                 message = "Place your mines. Click to place" if mines_left > 0 else "All mines placed. Starting game..."
                 self.renderer.display_message(message, (self.renderer.screen_size[0] // 2, 50))
             
+            #self.renderer.update_display()
+            self.state.update()
             self.renderer.update_display()
+
 
             if self.board.get_won():
                 self.win()
                 running = False
         pygame.quit()
-
-    """def getImageString(self, piece):
-        if piece.get_clicked():
-            return str(piece.getNumAround()) if not piece.getHasBomb() else 'bomb-at-clicked-block'
-        if (self.board.get_lost()):
-            if (piece.getHasBomb()):
-                return 'unclicked-bomb'
-            return 'wrong-flag' if piece.getFlagged() else 'empty-block'
-        return 'flag' if piece.getFlagged() else 'empty-block'"""
 
     def convert_pixel_to_grid(self, pixel_position):
         grid_x = pixel_position[0] // self.renderer.piece_size[0]

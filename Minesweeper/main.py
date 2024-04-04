@@ -2,8 +2,24 @@ import sys
 from game import Game
 
 def main() -> None:
-    size = int(sys.argv[1]), int(sys.argv[2])
-    mine_count = float(sys.argv[3])
+    if len(sys.argv) != 4:
+        print("Usage: python3 main.py grid_width grid_height mine_count")
+        sys.exit(1)
+    try:
+        grid_width = int(sys.argv[1])
+        grid_height = int(sys.argv[2])
+        mine_count = int(sys.argv[3])
+
+        if grid_width <= 0 or grid_height <= 0 or mine_count <= 0:
+            raise ValueError("Grid dimensions and mine count must be positive numbers > 0.")
+
+    except ValueError as e:
+        print("Invalid input:", e)
+        sys.exit(1)
+
+    #size = int(sys.argv[1]), int(sys.argv[2])
+    #mine_count = float(sys.argv[3])
+    size = (grid_width, grid_height)
     g = Game(size, mine_count)
     g.run()
 

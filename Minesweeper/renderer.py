@@ -34,17 +34,20 @@ class Renderer:
             assets[fileName.split(".")[0]] = img
         return assets
     
-    def draw_board(self, board) -> None:
+    def draw_board(self, board, mine_positions=[]) -> None:
         self.screen.fill((0, 0, 0))
         top_left = (0, 0)
-        for row in board.get_board():
-            for piece in row: # call piece space?
-                self.draw_piece(piece, top_left)
-                #rect = pygame.Rect(top_left, self.pieceSize)
-                #image = self.images[self.getImageString(piece)]
-                #self.screen.blit(image, top_left) 
-                top_left = top_left[0] + self.piece_size[0], top_left[1]
-            top_left = (0, top_left[1] + self.piece_size[1])
+        for y, row in enumerate(board.get_board()):
+            for x, piece in enumerate(row): # call piece space?
+                position = (top_left[0] + x * self.piece_size[0], top_left[1] + y * self.piece_size[1])
+                if (y, x) in mine_positions:
+                    # draw bomb image for selected mine positions
+                    self.screen.blit(self.assets['unclicked-bomb'], position)
+                else:
+                    self.draw_piece(piece, position)
+                    #self.draw_piece(piece, top_left)
+                #top_left = top_left[0] + self.piece_size[0], top_left[1]
+            #top_left = (0, top_left[1] + self.piece_size[1])
     
     def draw_piece(self, piece, position) -> None:
         image_key = self.get_image_key(piece)
