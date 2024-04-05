@@ -14,10 +14,12 @@ class PlayingState(State):
         self.game.renderer.draw_board(self.game.board)
     
     def enter(self):
+        print("Entering PlayingState")
         # finalize board setup or other tasks to start playing
         if not self.game.board.initialized:
             self.game.initialize_board()
 
     def exit(self):
+        print("Exiting PlayingState")
         # cleanup before leaving the playing state
         pass

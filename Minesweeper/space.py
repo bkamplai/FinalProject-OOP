@@ -24,18 +24,21 @@ class Space:
     def get_flagged(self) ->bool:
         return self.flagged
 
-    def toggle_flag(self) ->None:
+    def toggle_flag(self) -> None:
         self.flagged = not self.flagged
 
-    def handle_click(self) ->None:
+    def handle_click(self) -> None:
         self.clicked = True
 
-    def set_num_around(self) ->None:
+    def set_num_around(self) -> None:
         num = 0
         for neighbor in self.neighbors:
             if neighbor.get_has_bomb():
                 num += 1
+                print("Neighbor with Mine found")
         self.around = num
+        print(f"Setting num_around: {self.around} for Space")
+
 
     def set_neighbors(self, neighbors: int) ->None:
         self.neighbors = neighbors

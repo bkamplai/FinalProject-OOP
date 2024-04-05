@@ -15,14 +15,16 @@ class InitializingState(State):
                 self.game.renderer.update_display()
                 pygame.time.delay(3000)
                 self.game.change_state(PlayingState(self.game))
-    
+
     def update(self):
         self.game.renderer.draw_board(self.game.board, self.game.mine_positions)
 
     def enter(self):
+        print("Entering InitializingState")
         # any setup needed when entering the initializing state
         self.game.update_mine_placement_message()
 
     def exit(self):
+        print("Exiting InitializingState")
         # cleanup before leaving the initializing state
         pass

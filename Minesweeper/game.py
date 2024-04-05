@@ -23,6 +23,7 @@ class Game:
         self.renderer.update_display()
 
     def change_state(self, new_state):
+        print(f"Changing state from {type(self.state).__name__} to {type(new_state).__name__}")
         self.state.exit()
         self.state = new_state
         self.state.enter()
