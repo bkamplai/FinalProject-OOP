@@ -4,6 +4,8 @@ from solver import Solver
 from time import sleep
 from renderer import Renderer
 from initializingstate import InitializingState
+from playingstate import PlayingState
+from trivialsolver import TrivialSolver
 
 class Game:
     def __init__(self, grid_size, mine_count):
@@ -16,6 +18,16 @@ class Game:
         self.show_message = True
         self.state = InitializingState(self)
         self.initial_draw()
+        self.solver = TrivialSolver(self.board)
+
+    def run_solver(self):
+        print("In run solver")
+        if isinstance(self.state, PlayingState):
+            self.solver.solve()
+            pygame.time.wait(3000)
+        else:
+            print("Solver called in non-playing state. Ignored.")
+        #self.solver.solve()
 
     def initial_draw(self):
         # draw the initial state of the game
@@ -52,6 +64,7 @@ class Game:
                 message = "Place your mines. Click to place" if mines_left > 0 else "All mines placed. Starting game..."
                 self.renderer.display_message(message, (self.renderer.screen_size[0] // 2, 50))
             
+            self.run_solver()
             #self.renderer.update_display()
             self.state.update()
             self.renderer.update_display()
@@ -60,6 +73,7 @@ class Game:
             if self.board.get_won():
                 self.win()
                 running = False
+
         pygame.quit()
 
     def convert_pixel_to_grid(self, pixel_position):

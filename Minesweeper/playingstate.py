@@ -11,7 +11,10 @@ class PlayingState(State):
             self.game.solver.move()
     
     def update(self):
+        self.game.run_solver()
         self.game.renderer.draw_board(self.game.board)
+        if self.game.board.get_won() or self.game.board.get_lost():
+            print("Game is over")
     
     def enter(self):
         print("Entering PlayingState")

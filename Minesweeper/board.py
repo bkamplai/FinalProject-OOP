@@ -23,14 +23,12 @@ class Board:
         # Reset mine settings
         for row in self.board:
             for space in row:
-                #space.contains_mine = False
                 space.has_bomb = False
                 space.clicked = False
                 space.flagged = False
                 space.around = 0
         # Set mines at given positions
         for position in positions:
-            #self.get_piece(position).contains_mine = True
             self.get_piece(position).has_bomb = True
             print(f"Has Mine = {self.get_piece(position).has_bomb}")
         # Call set up methods
@@ -104,7 +102,7 @@ class Board:
                 neighbors.append(self.board[r][c])
         print(f"Neighbors for ({row},{col}): {len(neighbors)}")
 
-    def set_num_around(self): # SOMEHOW THE ISSUE IS RELATED TO THIS
+    def set_num_around(self):
         for rowIndex, row in enumerate(self.board):
             for colIndex, piece in enumerate(row):
                 piece.set_num_around()
