@@ -6,6 +6,7 @@ from renderer import Renderer
 from initializingstate import InitializingState
 from playingstate import PlayingState
 from trivialsolver import TrivialSolver
+from gameoverstate import GameOverState
 
 class Game:
     def __init__(self, grid_size, mine_count):
@@ -69,8 +70,14 @@ class Game:
             self.state.update()
             self.renderer.update_display()
 
-
-            if self.board.get_won():
+            #if self.board.get_won():
+                #self.win()
+                #running = False
+            if self.board.get_lost():
+                self.change_state(GameOverState(self))
+                running = False
+            elif self.board.get_won():
+                #self.change_state(WinState(self))
                 self.win()
                 running = False
 
