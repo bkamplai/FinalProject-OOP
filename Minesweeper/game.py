@@ -20,12 +20,14 @@ class Game:
         self.state = InitializingState(self)
         self.initial_draw()
         self.solver = TrivialSolver(self.board)
+        self.solver_triggered = False
 
     def run_solver(self):
         print("In run solver")
-        if isinstance(self.state, PlayingState):
+        if isinstance(self.state, PlayingState) and not self.solver_triggered:
             self.solver.solve()
             pygame.time.wait(3000)
+            self.solver_triggered = True
         else:
             print("Solver called in non-playing state. Ignored.")
         #self.solver.solve()

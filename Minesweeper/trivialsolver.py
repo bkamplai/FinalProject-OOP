@@ -23,6 +23,37 @@ class TrivialSolver(SolverStrategy):
             print("No unrevealed tiles found.")
         return None
 
+    def find_potentially_safe_tile(self, revealed_x, revealed_y):
+        size_x, size_y = self.board.get_size()
+        potentially_safe_tiles = []
+
+        # Define search area considering edge cases
+        search_offsets = range(-2, 3) # -2 -> 2 to cover secondary layer
+
+        for dx in search_offsets:
+            for dy in search_offsets:
+                new_x, new_y = revealed_x + dx, revealed_y + dy
+
+                #skip center equare and out-of-bounds spaces
+                if (dx == 0 and dy == 0) or not (0 <= new_x < size_x and 0 <=new_y < size_y):
+                    continue
+
+                #check if the space is directly adjacent
+                if abs(dx) <= 1 and abs(dy) <= 1:
+                    continue
+
+                #now focusing on secondary layer
+                tile = self.board.get_piece((new_x, new_y))
+                if not tile.get_clicked() and not tile.get_flagged():
+                    potentially_safe_tiles.append((new_x, new_y))
+
+                # Prioritize selection
+                if potentially_safe_tiles:
+                    # could add additional logic -> just return first one for now
+                    return potentially_safe_tiles[0]
+                
+                return None # no safe tile found
+
     def solve(self):
         print("In TrivialSolver solve()")
         tile = self.select_random_tile()
@@ -30,4 +61,10 @@ class TrivialSolver(SolverStrategy):
             print(f"Attempting to reveal tile at {tile}")  # Debugging
             # Simulate clicking on the tile
             self.board.handle_click(self.board.get_piece(tile), False)
-            #pass
+            if self.board.get_piece(tile).get_num_around() >= 0 and self.board.get_piece(tile).get_num_around() <= 9:
+                safe_tile = self.find_potentially_safe_tile(*tile)
+                if safe_tile:
+                    print(f"Found potentially safe tile at {safe_tile}, attempting to reveal")
+                    self.board.handle_click(self.board.get_piece(safe_tile), False)
+                else:
+                    print("No additional safe move was found")
