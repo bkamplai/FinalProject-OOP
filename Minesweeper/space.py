@@ -35,9 +35,9 @@ class Space:
         for neighbor in self.neighbors:
             if neighbor.get_has_bomb():
                 num += 1
-                print("Neighbor with Mine found")
+                #print("Neighbor with Mine found")
         self.around = num
-        print(f"Setting num_around: {self.around} for Space")
+       #print(f"Setting num_around: {self.around} for Space")
 
 
     def set_neighbors(self, neighbors: int) ->None:

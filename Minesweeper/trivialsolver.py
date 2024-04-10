@@ -62,7 +62,7 @@ class TrivialSolver(SolverStrategy):
             piece = self.board.get_piece(tile)
             self.board.handle_click(piece, False)
 
-            if piece.get_num_around == 0:
+            if piece.get_num_around() == 0:
                 print("Revealed an empty space, board should auto-reveal tiles")
                 break
 

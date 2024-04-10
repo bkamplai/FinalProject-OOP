@@ -89,7 +89,7 @@ class Board:
                 piece.set_neighbors(neighbors)
                 # debugging
                 mines_around = sum(n.has_bomb for n in neighbors)
-                print(f"Space at ({row},{col}) has {len(neighbors)} neighbors with {mines_around} mines.")
+                #print(f"Space at ({row},{col}) has {len(neighbors)} neighbors with {mines_around} mines.")
 
     
     def add_to_neighbors_list(self, neighbors, row, col):
@@ -100,17 +100,17 @@ class Board:
                 if r < 0 or r >= self.size[0] or c < 0 or c >= self.size[1]:
                     continue
                 neighbors.append(self.board[r][c])
-        print(f"Neighbors for ({row},{col}): {len(neighbors)}")
+        #print(f"Neighbors for ({row},{col}): {len(neighbors)}")
 
     def set_num_around(self):
         for rowIndex, row in enumerate(self.board):
             for colIndex, piece in enumerate(row):
                 piece.set_num_around()
                 # debugging
-                if rowIndex == 0 and colIndex == 0:  # Example for the first cell
-                    for neighbor in piece.neighbors:
-                        print(f"Neighbor mine status: {neighbor.has_bomb}")
-                print(f"Space at position ({rowIndex}, {colIndex}) has {piece.get_num_around()} mines around")
+                #if rowIndex == 0 and colIndex == 0:  # Example for the first cell
+                    #for neighbor in piece.neighbors:
+                        #print(f"Neighbor mine status: {neighbor.has_bomb}")
+                #print(f"Space at position ({rowIndex}, {colIndex}) has {piece.get_num_around()} mines around")
                 #print(f"Space at position ({rowIndex}, {colIndex}) has {piece.get_num_around()} mines around")
 
     def someConditionMetForSwitch(self):

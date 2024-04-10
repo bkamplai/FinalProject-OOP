@@ -31,15 +31,17 @@ class Game:
         print("Switched to AdvancedSolver")
 
     def run_solver(self):
-        print("In run solver")
-        if isinstance(self.state, PlayingState) and not self.solver_triggered:
+        #print("In run solver")
+        if isinstance(self.state, PlayingState):
             self.currentSolver.solve()
-            if self.shouldSwitchToAdvancedSolver():
+            if self.shouldSwitchToAdvancedSolver() and not isinstance(self.currentSolver, AdvancedSolver):
                 self.switchToAdvancedSolver()
+                self.solver_triggered = False # Reset trigger to allow advanced solver to run
             pygame.time.wait(3000)
-            self.solver_triggered = True
+            #self.solver_triggered = True
         else:
-            print("Solver called in non-playing state. Ignored.")
+            pass
+            #print("Solver called in non-playing state. Ignored.")
         #self.solver.solve()
             
     def shouldSwitchToAdvancedSolver(self):
