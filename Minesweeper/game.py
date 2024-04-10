@@ -7,6 +7,7 @@ from initializingstate import InitializingState
 from playingstate import PlayingState
 from trivialsolver import TrivialSolver
 from gameoverstate import GameOverState
+from advancedsolver import AdvancedSolver
 
 class Game:
     def __init__(self, grid_size, mine_count):
@@ -19,18 +20,32 @@ class Game:
         self.show_message = True
         self.state = InitializingState(self)
         self.initial_draw()
-        self.solver = TrivialSolver(self.board)
+        #self.solver = TrivialSolver(self.board)
         self.solver_triggered = False
+        self.trivialSolver = TrivialSolver(self.board)
+        self.advancedSolver = AdvancedSolver(self.board)
+        self.currentSolver = self.trivialSolver
+
+    def switchToAdvancedSolver(self):
+        self.currentSolver = self.advancedSolver
+        print("Switched to AdvancedSolver")
 
     def run_solver(self):
         print("In run solver")
         if isinstance(self.state, PlayingState) and not self.solver_triggered:
-            self.solver.solve()
+            self.currentSolver.solve()
+            if self.shouldSwitchToAdvancedSolver():
+                self.switchToAdvancedSolver()
             pygame.time.wait(3000)
             self.solver_triggered = True
         else:
             print("Solver called in non-playing state. Ignored.")
         #self.solver.solve()
+            
+    def shouldSwitchToAdvancedSolver(self):
+        # logic to decide when to switch (zero-value tile was revealed)
+        # PLACEHOLDER
+        return self.board.someConditionMetForSwitch()
 
     def initial_draw(self):
         # draw the initial state of the game

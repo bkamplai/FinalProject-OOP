@@ -113,5 +113,10 @@ class Board:
                 print(f"Space at position ({rowIndex}, {colIndex}) has {piece.get_num_around()} mines around")
                 #print(f"Space at position ({rowIndex}, {colIndex}) has {piece.get_num_around()} mines around")
 
-        
+    def someConditionMetForSwitch(self):
+        for row in self.board:
+            for space in row:
+                if space.get_clicked() and space.get_num_around() == 0:
+                    return True
+        return False
         
