@@ -8,24 +8,56 @@ class AdvancedSolver(SolverStrategy):
         self.mines_identified = []
 
     def evaluate_border_cells(self, border_cells):
-        print("IN evaluate_border_cells")
+        print("IN evaluate_boarder_cells")
         for x, y in border_cells:
             cell = self.board.get_piece((x, y))
             num_around = cell.get_num_around()
             flags_around = self.count_flags_around(x, y)
             hidden_tiles = self.find_hidden_tiles_around(x, y)
 
-            # Apply heuristic rules
-            if num_around == flags_around + len(hidden_tiles):
-                # All hidden tiles must be mines
-                for hidden in hidden_tiles:
-                    print(f"Flagging mine at: {hidden}")
-                    self.mines_identified.append(hidden)
-            elif flags_around == num_around:
+            if num_around == flags_around:
                 # All hidden tiles are safe
                 for hidden in hidden_tiles:
                     print(f"Adding safe square to probe: {hidden}")
                     self.safe_squares_to_probe.append(hidden)
+            elif num_around - flags_around == len(hidden_tiles):
+                # All hidden tiles are safe
+                for hidden in hidden_tiles:
+                    print(f"Flagging mine at: {hidden}")
+                    self.mines_identified.append(hidden)
+
+
+        #print("IN evaluate_border_cells")
+        #for x, y in border_cells:
+            #cell = self.board.get_piece((x, y))
+            #num_around = cell.get_num_around()
+            #flags_around = self.count_flags_around(x, y)
+            #hidden_tiles = self.find_hidden_tiles_around(x, y)
+
+            # Apply heuristic rules
+            #if num_around == flags_around + len(hidden_tiles):
+                # All hidden tiles must be mines
+                #for hidden in hidden_tiles:
+                    #print(f"Flagging mine at: {hidden}")
+                    #self.mines_identified.append(hidden)
+            #elif flags_around == num_around:
+                # All hidden tiles are safe
+                #for hidden in hidden_tiles:
+                    #print(f"Adding safe square to probe: {hidden}")
+                    #self.safe_squares_to_probe.append(hidden)
+            #else:
+                # check for safe neighbors if the number of flagged tiles equals the number on the tile
+                #if flags_around == num_around:
+                    #for hidden in hidden_tiles:
+                        #if not self.board.get_piece(hidden).get_flagged():
+                            #print(f"Adding safe square to probe: {hidden}")
+                            #self.safe_squares_to_probe.append(hidden)
+                # Check for mines using the subtraction rule
+                #if num_around - flags_around == len(hidden_tiles):
+                    #for hidden in hidden_tiles:
+                        #if not self.board.get_piece(hidden).get_flagged():
+                            #print(f"Flagging mine at: {hidden}")
+                            #self.mines_identified.append(hidden)
 
     def count_flags_around(self, x, y):
         print("In count_flags_around")
@@ -64,7 +96,11 @@ class AdvancedSolver(SolverStrategy):
         border_cells = self.find_border_cells()
         if border_cells:
             self.evaluate_border_cells(border_cells)
+            if not self.safe_squares_to_probe and not self.mines_identified:
+                print("No more cetain moves to make. The solver is either stuck or the puzzle is solved.")
             self.act_on_findings()
+        else:
+            print("No border cells to evaluate. Solver may be stuck or the puzzle is solved.")
 
     #def solve(self):
         #self.safe_squares_to_probe.clear()
