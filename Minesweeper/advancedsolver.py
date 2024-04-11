@@ -19,10 +19,12 @@ class AdvancedSolver(SolverStrategy):
             if num_around == flags_around + len(hidden_tiles):
                 # All hidden tiles must be mines
                 for hidden in hidden_tiles:
+                    print(f"Flagging mine at: {hidden}")
                     self.mines_identified.append(hidden)
             elif flags_around == num_around:
                 # All hidden tiles are safe
                 for hidden in hidden_tiles:
+                    print(f"Adding safe square to probe: {hidden}")
                     self.safe_squares_to_probe.append(hidden)
 
     def count_flags_around(self, x, y):
@@ -105,16 +107,19 @@ class AdvancedSolver(SolverStrategy):
         #pass
 
     def act_on_findings(self):
+        print("In act_on_findings")
         # Reveal safe squares
         for mine in self.mines_identified:
             x, y = mine
             tile = self.board.get_piece((x, y))
             if not tile.get_flagged():
+                print(f"Flagging tile at ({x}, {y})")
                 self.board.handle_click(tile, True) # toggle the flag status of the tile
         for square in self.safe_squares_to_probe:
             x, y = square
             tile = self.board.get_piece((x, y))
             if not tile.get_clicked():
+                print(f"Revealing tile at({x}, {y})")
                 self.board.handle_click(tile, False)
 
         self.safe_squares_to_probe.clear()
