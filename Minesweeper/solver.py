@@ -3,6 +3,15 @@ import pyautogui
 class Solver:
     def __init__(self, board) -> None:
         self.board = board
+        self.strategy = None
+
+    def set_strategy(self, strategy):
+        self.strategy = strategy
+
+    def solve(self):
+        if not self.strategy:
+            raise ValueError("Strategy not set!")
+        self.strategy.solve(self.board)
 
     def move(self) -> None:
         for row in self.board.get_board():

@@ -16,21 +16,26 @@ class Board:
                 piece = Space(False) # Initialzie with no mines
                 row.append(piece)
             self.board.append(row)
-        self.set_neighbors()
-        self.set_num_around()
+        #self.set_neighbors() # Don't call this until user places mines
+        #self.set_num_around() # Don't call this until user places mines
 
     def initialize_mines(self, positions):
         # Reset mine settings
         for row in self.board:
-            for piece in row:
-                piece.contains_mine = False
+            for space in row:
+                space.has_bomb = False
+                space.clicked = False
+                space.flagged = False
+                space.around = 0
         # Set mines at given positions
         for position in positions:
-            self.get_piece(position).contains_mine = True
+            self.get_piece(position).has_bomb = True
+            print(f"Has Mine = {self.get_piece(position).has_bomb}")
         # Call set up methods
         self.set_neighbors()
         self.set_num_around()
         self.initialized = True
+        print("Mines placed and initialized")
 
     def print_board(self):
         for row in self.board:
@@ -82,6 +87,10 @@ class Board:
                 neighbors = []
                 self.add_to_neighbors_list(neighbors, row, col)
                 piece.set_neighbors(neighbors)
+                # debugging
+                mines_around = sum(n.has_bomb for n in neighbors)
+                print(f"Space at ({row},{col}) has {len(neighbors)} neighbors with {mines_around} mines.")
+
     
     def add_to_neighbors_list(self, neighbors, row, col):
         for r in range(row - 1, row + 2):
@@ -91,10 +100,18 @@ class Board:
                 if r < 0 or r >= self.size[0] or c < 0 or c >= self.size[1]:
                     continue
                 neighbors.append(self.board[r][c])
-    
+        print(f"Neighbors for ({row},{col}): {len(neighbors)}")
+
     def set_num_around(self):
-        for row in self.board:
-            for piece in row:
+        for rowIndex, row in enumerate(self.board):
+            for colIndex, piece in enumerate(row):
                 piece.set_num_around()
+                # debugging
+                if rowIndex == 0 and colIndex == 0:  # Example for the first cell
+                    for neighbor in piece.neighbors:
+                        print(f"Neighbor mine status: {neighbor.has_bomb}")
+                print(f"Space at position ({rowIndex}, {colIndex}) has {piece.get_num_around()} mines around")
+                #print(f"Space at position ({rowIndex}, {colIndex}) has {piece.get_num_around()} mines around")
+
         
         

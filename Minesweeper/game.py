@@ -4,6 +4,9 @@ from solver import Solver
 from time import sleep
 from renderer import Renderer
 from initializingstate import InitializingState
+from playingstate import PlayingState
+from trivialsolver import TrivialSolver
+from gameoverstate import GameOverState
 
 class Game:
     def __init__(self, grid_size, mine_count):
@@ -16,6 +19,18 @@ class Game:
         self.show_message = True
         self.state = InitializingState(self)
         self.initial_draw()
+        self.solver = TrivialSolver(self.board)
+        self.solver_triggered = False
+
+    def run_solver(self):
+        print("In run solver")
+        if isinstance(self.state, PlayingState) and not self.solver_triggered:
+            self.solver.solve()
+            pygame.time.wait(3000)
+            self.solver_triggered = True
+        else:
+            print("Solver called in non-playing state. Ignored.")
+        #self.solver.solve()
 
     def initial_draw(self):
         # draw the initial state of the game
@@ -23,6 +38,7 @@ class Game:
         self.renderer.update_display()
 
     def change_state(self, new_state):
+        print(f"Changing state from {type(self.state).__name__} to {type(new_state).__name__}")
         self.state.exit()
         self.state = new_state
         self.state.enter()
@@ -51,14 +67,22 @@ class Game:
                 message = "Place your mines. Click to place" if mines_left > 0 else "All mines placed. Starting game..."
                 self.renderer.display_message(message, (self.renderer.screen_size[0] // 2, 50))
             
+            self.run_solver()
             #self.renderer.update_display()
             self.state.update()
             self.renderer.update_display()
 
-
-            if self.board.get_won():
+            #if self.board.get_won():
+                #self.win()
+                #running = False
+            if self.board.get_lost():
+                self.change_state(GameOverState(self))
+                running = False
+            elif self.board.get_won():
+                #self.change_state(WinState(self))
                 self.win()
                 running = False
+
         pygame.quit()
 
     def convert_pixel_to_grid(self, pixel_position):
