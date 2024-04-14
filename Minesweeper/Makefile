@@ -1,5 +1,5 @@
 MAIN = main.py
-TESTS = Tests/test_space.py Tests/test_board.py Tests/test_game.py Tests/test_initializingstate.py
+TESTS = Tests/test_space.py Tests/test_board.py Tests/test_game.py Tests/test_initializingstate.py Tests/test_playingstate.py
 PY = python3
 
 # target and its dependencies followed by commands
@@ -7,7 +7,7 @@ all: check_style check_types unittest unittest_pytest clean
 	@echo "All done!"
 
 unittest:
-	pytest -v --hypothesis-show-statistics --hypothesis-seed=100 --cov --cov-report term-missing $(TESTS)
+	pytest -vv --hypothesis-show-statistics --hypothesis-seed=100 --cov --cov-report term-missing $(TESTS)
 
 test-coverage:
 	pytest --cov $(TESTS) --cov-report term-missing
