@@ -2,6 +2,10 @@ from state import State
 import pygame
 
 class GameOverState(State):
+    def __init__(self, game, win=False):
+        super().__init__(game)
+        self.win = win
+
     def handle_click(self, position):
         # Handle logic to restart the game or quit
         pass

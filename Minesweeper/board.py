@@ -38,7 +38,7 @@ class Board:
         self.initialized = True
         print("Mines placed and initialized")
 
-    def reveal_all_non_flagged_square(self):
+    def reveal_all_non_flagged_squares(self):
         for row in self.board:
             for space in row:
                 if not space.get_flagged() and not space.get_clicked():
@@ -52,7 +52,7 @@ class Board:
         for row in self.board:
             for space in row:
                 if space.get_flagged():
-                    flag_count ++ 1
+                    flag_count += 1
         return flag_count
 
     def print_board(self):
