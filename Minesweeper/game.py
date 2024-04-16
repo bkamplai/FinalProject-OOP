@@ -34,6 +34,15 @@ class Game:
         #print("In run solver")
         if isinstance(self.state, PlayingState):
             self.currentSolver.solve()
+            
+            current_flag_count = self.board.count_flags()
+            if current_flag_count == self.expected_mine_count:
+                # If the numbers match, attempt to reveal all non-flagged squares
+                self.board.reveal_all_non_flagged_squares()
+                if self.board.check_won():
+                    self.change_state(GameOverState(self, win=True))
+                return
+
             if self.shouldSwitchToAdvancedSolver() and not isinstance(self.currentSolver, AdvancedSolver):
                 self.switchToAdvancedSolver()
                 self.solver_triggered = False # Reset trigger to allow advanced solver to run

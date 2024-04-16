@@ -6,9 +6,9 @@ class PlayingState(State):
         rightClick = pygame.mouse.get_pressed(num_buttons=3)[2]
         self.game.handleClick(position, rightClick)
 
-    def handle_keydown(self, event):
-        if event.key == pygame.K_SOMEKEY:
-            self.game.solver.move()
+    #def handle_keydown(self, event):
+        #if event.key == pygame.K_SOMEKEY:
+            #self.game.solver.move()
     
     def update(self):
         self.game.run_solver()

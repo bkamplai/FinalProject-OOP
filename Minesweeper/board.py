@@ -8,6 +8,7 @@ class Board:
         self.won = False 
         self.lost = False
         self.initialized = False
+        self.mine_count = mine_count
         for row in range(size[0]):
             row = []
             for col in range(size[1]):
@@ -36,6 +37,23 @@ class Board:
         self.set_num_around()
         self.initialized = True
         print("Mines placed and initialized")
+
+    def reveal_all_non_flagged_square(self):
+        for row in self.board:
+            for space in row:
+                if not space.get_flagged() and not space.get_clicked():
+                    self.handle_click(space, False)
+
+    def get_total_mine_count(self):
+        return self.mine_count
+
+    def count_flags(self):
+        flag_count = 0
+        for row in self.board:
+            for space in row:
+                if space.get_flagged():
+                    flag_count ++ 1
+        return flag_count
 
     def print_board(self):
         for row in self.board:
