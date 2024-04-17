@@ -6,6 +6,7 @@ class AdvancedSolver(SolverStrategy):
         self.board = board
         self.safe_squares_to_probe = []
         self.mines_identified = []
+        self.flags_placed = 0
 
     def flag_mines(self):
         mines_flagged = False
@@ -26,6 +27,7 @@ class AdvancedSolver(SolverStrategy):
                             print(f"Flagging mine at: {hidden}")
                             self.board.handle_click(hidden_cell, True)
                             mines_flagged = True
+                            self.flags_placed += 1
         return mines_flagged
 
     def evaluate_border_cells(self, border_cells):
@@ -97,6 +99,9 @@ class AdvancedSolver(SolverStrategy):
                     continue
             
             self.act_on_findings()
+    
+    def get_flags_placed(self):
+        return self.flags_placed
 
     def find_border_cells(self):
         border_cells = []
@@ -130,6 +135,7 @@ class AdvancedSolver(SolverStrategy):
             if not mine_cell.get_flagged():
                 print(f"Flagging tile at {mine_coords}")
                 self.board.handle_click(mine_cell, True)
+                self.flags_placed += 1
 
         for square_coords in self.safe_squares_to_probe:
             safe_cell = self.board.get_piece(square_coords)

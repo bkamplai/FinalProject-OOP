@@ -4,6 +4,11 @@ import random
 class TrivialSolver(SolverStrategy):
     def __init__(self, board):
         self.board = board
+        self.flags_placed = 0
+
+    def get_flags_placed(self):
+        return self.flags_placed
+    
 
     def select_random_tile(self):
         print("SELECT RANDOM TILE")

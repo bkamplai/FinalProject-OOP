@@ -79,7 +79,9 @@ class Game:
                         self.solver.move()
 
             self.run_solver()
+            #flags_placed = self.solver_interface.get_flags_placed()
             self.state.update()
+            #self.renderer.draw_board(self.board, flags_placed=flags_placed)
             self.renderer.update_display()
 
             if self.board.get_lost():
@@ -92,8 +94,9 @@ class Game:
         pygame.quit()
 
     def convert_pixel_to_grid(self, pixel_position):
+        header_height = 50
         grid_x = pixel_position[0] // self.renderer.piece_size[0]
-        grid_y = pixel_position[1] // self.renderer.piece_size[1]
+        grid_y = (pixel_position[1] - header_height) // self.renderer.piece_size[1]
         return grid_y, grid_x # return as (row, col)
 
     def handleClick(self, position, flag):

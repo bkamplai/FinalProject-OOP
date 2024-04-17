@@ -27,7 +27,7 @@ class Renderer:
             assets[fileName.split(".")[0]] = img
         return assets
     
-    def draw_header(self, mine_count):
+    def draw_header(self, mine_count, flags_placed):
         header_height = 50
         header_rect = pygame.Rect(0, 0, self.screen_size[0], header_height)
         pygame.draw.rect(self.screen, (200, 200, 200), header_rect)
@@ -38,15 +38,22 @@ class Renderer:
         smiley_y = header_height // 2 - smiley_img.get_height() // 2
         self.screen.blit(smiley_img, (smiley_x, smiley_y))
 
-        text = {mine_count}
+        text = str(mine_count - flags_placed)
+        #text = {mine_count}
         text_surface = self.font.render(text, True, (0, 0, 0))
         text_x = 10
         text_y = header_height // 2 - text_surface.get_height() // 2
         self.screen.blit(text_surface, (text_x, text_y))
 
-    def draw_board(self, board, mine_positions=[]) -> None:
-        self.screen.fill((0, 0, 0))
-        top_left = (0, 0)
+    def draw_board(self, board, mine_positions=[], flags_placed=0) -> None:
+        header_height = 50
+
+        total_header_height = header_height
+
+        top_left = (0, total_header_height)
+        
+        #self.screen.fill((0, 0, 0))
+        #top_left = (0, 0)
         for y, row in enumerate(board.get_board()):
             for x, piece in enumerate(row): # call piece space?
                 position = (top_left[0] + x * self.piece_size[0], top_left[1] + y * self.piece_size[1])
@@ -55,6 +62,7 @@ class Renderer:
                     self.screen.blit(self.assets['unclicked-bomb'], position)
                 else:
                     self.draw_piece(piece, position)
+        self.draw_header(board.get_total_mine_count(), flags_placed)
     
     def draw_piece(self, piece, position) -> None:
         image_key = self.get_image_key(piece)

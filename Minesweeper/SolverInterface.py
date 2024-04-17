@@ -10,6 +10,12 @@ class SolverInterface:
         }
         self.current_solver = None
     
+    def get_flags_placed(self):
+        if self.current_solver is not None:
+            return self.current_solver.flags_placed
+        else:
+            return 0
+
     def set_solver(self, solver_key):
         # Change the solver based on the key provided
         if solver_key in self.solvers:
