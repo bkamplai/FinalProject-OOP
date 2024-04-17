@@ -69,10 +69,10 @@ class Game:
         self.state = new_state
         self.state.enter()
 
-    def update_mine_placement_message(self):
-        mines_left = self.expected_mine_count - len(self.mine_positions)
-        message = f"Place your mines. Mines left: {mines_left}"
-        self.renderer.display_message(message, (self.renderer.screen_size[0] // 2, 50))
+    #def update_mine_placement_message(self):
+        #mines_left = self.expected_mine_count - len(self.mine_positions)
+        #message = f"Place your mines. Mines left: {mines_left}"
+        #self.renderer.display_message(message, (self.renderer.screen_size[0] // 2, 50))
 
     def run(self):
         running = True
@@ -88,10 +88,10 @@ class Game:
                     if self.board.initialized and not self.board.get_lost():
                         self.solver.move()
 
-            if self.show_message:
-                mines_left = self.expected_mine_count - len(self.mine_positions)
-                message = "Place your mines. Click to place" if mines_left > 0 else "All mines placed. Starting game..."
-                self.renderer.display_message(message, (self.renderer.screen_size[0] // 2, 50))
+            #if self.show_message:
+                #mines_left = self.expected_mine_count - len(self.mine_positions)
+                #message = "Place your mines. Click to place" if mines_left > 0 else "All mines placed. Starting game..."
+                #self.renderer.display_message(message, (self.renderer.screen_size[0] // 2, 50))
             
             self.run_solver()
             #self.renderer.update_display()
