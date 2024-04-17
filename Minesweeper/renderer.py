@@ -73,9 +73,3 @@ class Renderer:
     
     def clear_screen(self):
         self.screen.fill((0, 0, 0))
-
-    """def display_message(self, text, position):
-        text_surface = self.font.render(text, True, (255, 255, 255))
-        text_rect = text_surface.get_rect(center=(self.screen.get_width() / 2, 10)) # get rectangle of text surface and center
-        self.screen.blit(text_surface, text_rect) # Draw text on screen
-        pygame.display.update(text_rect)"""

@@ -26,9 +26,6 @@ class AdvancedSolver(SolverStrategy):
                             print(f"Flagging mine at: {hidden}")
                             self.board.handle_click(hidden_cell, True)
                             mines_flagged = True
-                        #if not self.board.get_piece(hidden).get_flagged():
-                            #self.mines_identified.append(hidden)
-                            #mines_flagged = True
         return mines_flagged
 
     def evaluate_border_cells(self, border_cells):
@@ -51,36 +48,6 @@ class AdvancedSolver(SolverStrategy):
                         changes_made = True
         
         return changes_made or self.flag_mines()
-    
-            # Subtraction rule for flagging mines
-            #if num_around - flags_around == len(hidden_tiles) and len(hidden_tiles) > 0:
-                #for hidden in hidden_tiles:
-                    #if not self.board.get_piece(hidden).get_flagged():
-                        #print(f"Flagging mine at: {hidden}")
-                        #self.mines_identified.append(hidden)
-                        #changes_made = True
-        #return changes_made
-
-        #print("IN evaluate_boarder_cells")
-        #for x, y in border_cells:
-            #cell = self.board.get_piece((x, y))
-            #num_around = cell.get_num_around()
-            #flags_around = self.count_flags_around(x, y)
-            #hidden_tiles = self.find_hidden_tiles_around(x, y)
-
-            #if num_around == flags_around:
-                # All hidden tiles are safe
-                #for hidden in hidden_tiles:
-                    #print(f"Adding safe square to probe: {hidden}")
-                    #self.safe_squares_to_probe.append(hidden)
-            #elif num_around - flags_around == len(hidden_tiles):
-                # All hidden tiles are safe
-                #for hidden in hidden_tiles:
-                    #print(f"Flagging mine at: {hidden}")
-                    #self.mines_identified.append(hidden)
-
-
-       
 
     def count_flags_around(self, x, y):
         print("In count_flags_around")
@@ -111,7 +78,7 @@ class AdvancedSolver(SolverStrategy):
         return hidden_tiles
 
     def is_valid_coord(self, x, y):
-        print("in is_valid_coord")
+        #print("in is_valid_coord")
         return 0 <= x < self.board.get_size()[0] and 0 <= y < self.board.get_size()[1]
 
     def solve(self):
@@ -130,16 +97,6 @@ class AdvancedSolver(SolverStrategy):
                     continue
             
             self.act_on_findings()
-        
-        #print("Solving with AdvancedSolver")
-        #border_cells = self.find_border_cells()
-        #if border_cells:
-            #self.evaluate_border_cells(border_cells)
-            #if not self.safe_squares_to_probe and not self.mines_identified:
-                #print("No more cetain moves to make. The solver is either stuck or the puzzle is solved.")
-            #self.act_on_findings()
-        #else:
-            #print("No border cells to evaluate. Solver may be stuck or the puzzle is solved.")
 
     def find_border_cells(self):
         border_cells = []
@@ -174,13 +131,6 @@ class AdvancedSolver(SolverStrategy):
                 print(f"Flagging tile at {mine_coords}")
                 self.board.handle_click(mine_cell, True)
 
-        #for mine in self.mines_identified:
-            #self.board.handle_click(mine, True)
-            #x, y = mine
-            #tile = self.board.get_piece((x, y))
-            #if not tile.get_flagged():
-                #print(f"Flagging tile at ({x}, {y})")
-                #self.board.handle_click(tile, True) # toggle the flag status of the tile
         for square_coords in self.safe_squares_to_probe:
             safe_cell = self.board.get_piece(square_coords)
             if not safe_cell.get_clicked():
@@ -188,13 +138,3 @@ class AdvancedSolver(SolverStrategy):
                 self.board.handle_click(safe_cell, False)
         self.safe_squares_to_probe.clear()
         self.mines_identified.clear()
-        
-        #for square in self.safe_squares_to_probe:
-            #x, y = square
-            #tile = self.board.get_piece((x, y))
-            #if not tile.get_clicked():
-                #print(f"Revealing tile at({x}, {y})")
-                #self.board.handle_click(tile, False)
-
-        #self.safe_squares_to_probe.clear()
-        #self.mines_identified.clear()

@@ -1,7 +1,7 @@
 from typing import List, Self
 
 class Space:
-    # States: Not clicked, clicked, flagged
+    # States: Has bomb, clicked, flagged
     def __init__(self, has_bomb: bool) -> None:
         self.has_bomb: bool = has_bomb
         self.around: int = 0
@@ -38,7 +38,6 @@ class Space:
                 #print("Neighbor with Mine found")
         self.around = num
        #print(f"Setting num_around: {self.around} for Space")
-
 
     def set_neighbors(self, neighbors: int) ->None:
         self.neighbors = neighbors

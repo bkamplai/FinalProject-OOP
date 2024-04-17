@@ -12,13 +12,9 @@ class Board:
         for row in range(size[0]):
             row = []
             for col in range(size[1]):
-                #bomb = random.random() < mine_count #going away to replace with IO
-                #piece = Space(bomb)
                 piece = Space(False) # Initialzie with no mines
                 row.append(piece)
             self.board.append(row)
-        #self.set_neighbors() # Don't call this until user places mines
-        #self.set_num_around() # Don't call this until user places mines
 
     def initialize_mines(self, positions):
         # Reset mine settings
@@ -124,14 +120,9 @@ class Board:
         for rowIndex, row in enumerate(self.board):
             for colIndex, piece in enumerate(row):
                 piece.set_num_around()
-                # debugging
-                #if rowIndex == 0 and colIndex == 0:  # Example for the first cell
-                    #for neighbor in piece.neighbors:
-                        #print(f"Neighbor mine status: {neighbor.has_bomb}")
-                #print(f"Space at position ({rowIndex}, {colIndex}) has {piece.get_num_around()} mines around")
-                #print(f"Space at position ({rowIndex}, {colIndex}) has {piece.get_num_around()} mines around")
 
-    def someConditionMetForSwitch(self):
+    def isBoardOpened(self):
+        # Check to see if the space that was selected opened up the board
         for row in self.board:
             for space in row:
                 if space.get_clicked() and space.get_num_around() == 0:

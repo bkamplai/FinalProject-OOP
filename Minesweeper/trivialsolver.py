@@ -74,14 +74,3 @@ class TrivialSolver(SolverStrategy):
             else:
                 print("No additional safe move was found, stopping solver.")
                 break
-        #if tile:
-            #print(f"Attempting to reveal tile at {tile}")  # Debugging
-            # Simulate clicking on the tile
-            #self.board.handle_click(self.board.get_piece(tile), False)
-            #if self.board.get_piece(tile).get_num_around() >= 0 and self.board.get_piece(tile).get_num_around() <= 9:
-                #safe_tile = self.find_potentially_safe_tile(*tile)
-                #if safe_tile:
-                    #print(f"Found potentially safe tile at {safe_tile}, attempting to reveal")
-                    #self.board.handle_click(self.board.get_piece(safe_tile), False)
-                #else:
-                    #print("No additional safe move was found")
