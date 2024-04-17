@@ -29,7 +29,7 @@ class Solver:
                         flagged += 1
                 if around == flagged:
                     self.open_unflagged(neighbors)
-                if around == unknown:
+                elif around == unknown:
                     self.flag_all(neighbors)
 
     def open_unflagged(self, neighbors) -> None:
