@@ -39,6 +39,7 @@ class Renderer:
         self.screen.blit(smiley_img, (smiley_x, smiley_y))
 
         text = str(mine_count - flags_placed)
+        print(f"Text: ",{text})
         #text = {mine_count}
         text_surface = self.font.render(text, True, (0, 0, 0))
         text_x = 10

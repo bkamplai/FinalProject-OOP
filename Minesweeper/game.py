@@ -28,7 +28,7 @@ class Game:
             #self.currentSolver.solve()
             self.solver_interface.set_solver('trivial')
             self.solver_interface.solve()
-            
+
             current_flag_count = self.board.count_flags()
             if current_flag_count == self.expected_mine_count:
                 # If the numbers match, attempt to reveal all non-flagged squares

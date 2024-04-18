@@ -12,6 +12,7 @@ class SolverInterface:
     
     def get_flags_placed(self):
         if self.current_solver is not None:
+            print(f"INTERFACE FLAGS_PLACED = {self.current_solver.flags_placed}")
             return self.current_solver.flags_placed
         else:
             return 0

@@ -13,6 +13,7 @@ class PlayingState(State):
     def update(self):
         self.game.run_solver()
         flags_placed = self.solver_interface.get_flags_placed()
+        print(f"FLAGS PLACED = {flags_placed}")
         self.game.renderer.draw_board(self.game.board, flags_placed=flags_placed)
         if self.game.board.get_won() or self.game.board.get_lost():
             print("Game is over")
