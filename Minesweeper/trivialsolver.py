@@ -4,6 +4,11 @@ import random
 class TrivialSolver(SolverStrategy):
     def __init__(self, board):
         self.board = board
+        self.flags_placed = 0
+
+    def get_flags_placed(self):
+        return self.flags_placed
+    
 
     def select_random_tile(self):
         print("SELECT RANDOM TILE")
@@ -57,14 +62,20 @@ class TrivialSolver(SolverStrategy):
     def solve(self):
         print("In TrivialSolver solve()")
         tile = self.select_random_tile()
-        if tile:
-            print(f"Attempting to reveal tile at {tile}")  # Debugging
-            # Simulate clicking on the tile
-            self.board.handle_click(self.board.get_piece(tile), False)
-            if self.board.get_piece(tile).get_num_around() >= 0 and self.board.get_piece(tile).get_num_around() <= 9:
-                safe_tile = self.find_potentially_safe_tile(*tile)
-                if safe_tile:
-                    print(f"Found potentially safe tile at {safe_tile}, attempting to reveal")
-                    self.board.handle_click(self.board.get_piece(safe_tile), False)
-                else:
-                    print("No additional safe move was found")
+        while tile:
+            print(f"Attempting to reveal tile at {tile}")
+            piece = self.board.get_piece(tile)
+            self.board.handle_click(piece, False)
+
+            if piece.get_num_around() == 0:
+                print("Revealed an empty space, board should auto-reveal tiles")
+                break
+
+            # If the tile is a number:
+            safe_tile = self.find_potentially_safe_tile(*tile)
+            if safe_tile:
+                print(f"Found potentially safe tile at {safe_tile}, attempting to reveal")
+                tile = safe_tile
+            else:
+                print("No additional safe move was found, stopping solver.")
+                break
