@@ -21,8 +21,9 @@ class TestPlayingState(unittest.TestCase):
     
     def test_update(self):
         with patch.object(self.game.renderer, "draw_board") as mock_draw:
+            self.state.solver_interface.get_flags_placed = MagicMock(return_value=10)  # example value
             self.state.update()
-            mock_draw.assert_called_once_with(self.game.board)
+            mock_draw.assert_called_once_with(self.game.board, flags_placed=10)
 
     
     def test_enter(self):
