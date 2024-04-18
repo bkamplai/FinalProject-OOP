@@ -55,8 +55,7 @@ class Renderer:
 
         # Print the mine count
         text = str(mine_count - flags_placed)
-        print(f"Text: ",{text})
-        #text = {mine_count}
+        #print(f"Text: ",{text})
         text_surface = self.font.render(text, True, (0, 0, 0))
         text_x = 10
         text_y = header_height // 2 - text_surface.get_height() // 2

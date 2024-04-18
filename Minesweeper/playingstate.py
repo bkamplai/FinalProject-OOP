@@ -16,6 +16,7 @@ class PlayingState(State):
     
     def update(self):
         """ Update the Playing State. """
+        print("CALLING RUN_SOLVER()")
         self.game.run_solver() # Tell the game to run the solver
         flags_placed = self.solver_interface.get_flags_placed() # Get num of flags placed by solver
         print(f"FLAGS PLACED = {flags_placed}")

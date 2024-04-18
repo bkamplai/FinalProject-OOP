@@ -26,13 +26,15 @@ class Game:
         self.state = InitializingState(self)
         self.initial_draw()
         self.solver_interface = SolverInterface(self.board)
+        self.solver_interface.set_solver('trivial')
+
 
     def run_solver(self):
         """
         Run the solver to automatically play the game.
         """
         if isinstance(self.state, PlayingState):
-            self.solver_interface.set_solver('trivial')
+            #self.solver_interface.set_solver('trivial')
             self.solver_interface.solve()
 
             current_flag_count = self.board.count_flags()
@@ -45,6 +47,7 @@ class Game:
 
             if self.shouldSwitchSolver():
                 self.solver_interface.set_solver('advanced')
+                print("Switched to Advanced Solver")
                 self.solver_interface.solve()
                 self.solver_triggered = False
             pygame.time.wait(3000)
@@ -91,7 +94,7 @@ class Game:
                 elif event.type == pygame.KEYDOWN:
                     if self.board.initialized and not self.board.get_lost():
                         self.solver.move()
-
+            #print("ABOUT TO CALL RUN_SOLVER()")
             self.run_solver()
             #flags_placed = self.solver_interface.get_flags_placed()
             self.state.update()
@@ -100,10 +103,14 @@ class Game:
 
             if self.board.get_lost():
                 self.change_state(GameOverState(self))
+                print(f"GAME LOST: {self.board.get_lost()}")
                 running = False
             elif self.board.get_won():
+                print(f"GAME WON: {self.board.get_won()}")
                 self.win()
                 running = False
+
+            #pygame.time.wait(5000) # Causes a pause on everything until game is over
 
         pygame.quit()
 

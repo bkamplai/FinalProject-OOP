@@ -1,4 +1,5 @@
 from solverstrategy import SolverStrategy
+import pygame
 
 class AdvancedSolver(SolverStrategy):
     def __init__(self, board):
@@ -190,6 +191,7 @@ class AdvancedSolver(SolverStrategy):
             safe_cell = self.board.get_piece(square_coords)
             if not safe_cell.get_clicked():
                 print(f"Revealing the tile at {square_coords}")
+                #pygame.time.wait(5000)
                 self.board.handle_click(safe_cell, False)
         self.safe_squares_to_probe.clear()
         self.mines_identified.clear()
