@@ -17,8 +17,6 @@ def main() -> None:
         print("Invalid input:", e)
         sys.exit(1)
 
-    #size = int(sys.argv[1]), int(sys.argv[2])
-    #mine_count = float(sys.argv[3])
     size = (grid_width, grid_height)
     g = Game(size, mine_count)
     g.run()

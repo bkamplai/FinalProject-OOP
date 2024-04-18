@@ -37,7 +37,6 @@ class Solver:
             if not piece.get_flagged():
                 self.board.handle_click(piece, False)
 
-
     def flag_all(self, neighbors) -> None:
         for piece in neighbors:
             if not piece.get_flagged():
