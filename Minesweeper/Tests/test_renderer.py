@@ -29,6 +29,8 @@ class TestRenderer(unittest.TestCase):
         class MockBoard:
             def get_board(self):
                 return [[MockPiece() for _ in range(10)] for _ in range(10)]
+            def get_total_mine_count(self):
+                return len(mine_positions)
 
         class MockPiece:  # pragma: no cover
             def get_clicked(self):
