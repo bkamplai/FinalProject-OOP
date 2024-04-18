@@ -26,5 +26,7 @@ check_style:
 
 clean:
 	rm -rf __pycache__
+	rm -rf .mypy_cache
+	rm -rf .pytest_cache
 	rm -rf *.pyc
 	rm -rf .coverage

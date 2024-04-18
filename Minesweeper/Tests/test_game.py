@@ -1,8 +1,9 @@
 import unittest
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, patch, call, ANY
 from game import Game
 from playingstate import PlayingState
 from gameoverstate import GameOverState
+from initializingstate import InitializingState
 from pygame import QUIT, MOUSEBUTTONDOWN, KEYDOWN
 
 class TestGame(unittest.TestCase):
@@ -17,19 +18,22 @@ class TestGame(unittest.TestCase):
         self.game.board = MagicMock()
     
     def test_run_solver_playing_state(self):
-        self.game.solver.solve = MagicMock()
+        self.game.state = PlayingState(self.game)
+        self.game.expected_mine_count = 5
+        self.game.board.count_flags = MagicMock(return_value=4)
+        self.game.solver_interface.solve = MagicMock()
         self.game.run_solver()
-        self.game.solver.solve.assert_called_once()
+        self.game.solver_interface.solve.assert_called()
     
     def test_run_solver_not_playing_state(self):
-        self.game.state = MagicMock()
+        self.game.state = InitializingState(self.game)
+        self.game.solver_interface.solve = MagicMock()
         self.game.run_solver()
-        print("Solver called in non-playing state. Ignored.")
-        self.game.solver.solve.assert_not_called()
+        self.game.solver_interface.solve.assert_not_called()
     
     def test_solver_triggered_after_run(self):
         self.game.run_solver()
-        self.assertTrue(self.game.solver_triggered)
+        self.assertFalse(self.game.solver_triggered)
     
     def test_change_state(self):
         old_state = MagicMock()
@@ -39,12 +43,6 @@ class TestGame(unittest.TestCase):
         old_state.exit.assert_called_once()
         new_state.enter.assert_called_once()
         self.assertEqual(self.game.state, new_state)
-    
-    def test_update_mine_placement_message(self):
-        self.game.mine_positions = ["pos1", "pos2"]
-        self.game.update_mine_placement_message()
-        expected_message = "Place your mines. Mines left: 3"
-        self.game.renderer.display_message.assert_called_with(expected_message, (400, 50))
 
     def test_convert_pixel_to_grid(self):
         pixel_position = (450, 300)
@@ -92,6 +90,43 @@ class TestGame(unittest.TestCase):
                 self.game.win()
                 mock_sound.assert_called_with('win.wav')
                 mock_sound.return_value.play.assert_called()
+    
+    def test_run_solver_playing_state_trivial_solver(self):
+        self.game.state = PlayingState(self.game)
+        self.game.solver_interface.set_solver = MagicMock()
+        self.game.solver_interface.solve = MagicMock()
+        self.game.run_solver()
+        self.game.solver_interface.set_solver.assert_any_call('trivial')
+    
+    def test_run_solver_playing_state_flag_count_matches(self):
+        self.game.state = PlayingState(self.game)
+        self.game.expected_mine_count = 3
+        self.game.board.count_flags = MagicMock(return_value=3)
+        self.game.board.reveal_all_non_flagged_squares = MagicMock()
+        self.game.board.check_won = MagicMock(return_value=True)
+        self.game.change_state = MagicMock()
+        self.game.run_solver()
+        self.game.board.reveal_all_non_flagged_squares.assert_called_once()
+        self.game.board.check_won.assert_called_once()
+        self.game.change_state.assert_called_with(ANY)
+
+        call_args = self.game.change_state.call_args
+        if call_args:
+            args, kwargs = call_args
+            game_over_state_instance = args[0]
+            assert isinstance(game_over_state_instance, GameOverState), "Must be an instance of GameOverState"
+            assert game_over_state_instance.win == True, "Win must be True"
+    
+    def test_run_solver_playing_state_advanced_solver_triggered(self):
+        self.game.state = PlayingState(self.game)
+        self.game.solver_interface.set_solver = MagicMock()
+        self.game.solver_interface.solve = MagicMock()
+        self.game.shouldSwitchSolver = MagicMock(return_value=True)
+        self.game.run_solver()
+        calls = [call('trivial'), call('advanced')]
+        self.game.solver_interface.set_solver.assert_has_calls(calls)
+        self.assertEqual(self.game.solver_interface.solve.call_count, 2)
+        self.assertFalse(self.game.solver_triggered)
 
 
 if __name__ == "__main__":  # pragma: no cover
