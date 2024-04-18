@@ -3,15 +3,24 @@ import random
 
 class TrivialSolver(SolverStrategy):
     def __init__(self, board):
+        """
+        Initialize the Trivial Solver.
+        board (Board): The game board
+        """
         self.board = board
         self.flags_placed = 0
 
     def get_flags_placed(self):
+        """ Return the number of flags placed by the solver (display)"""
         return self.flags_placed
     
 
     def select_random_tile(self):
-        print("SELECT RANDOM TILE")
+        """
+        Select a random unrevealed tile from the board.
+        Returns tuple or None - Coordinates of the selected tile, or None if no unrevealed tiles
+        """
+        #print("SELECT RANDOM TILE")
         unrevealed_tiles = []
 
         for x in range(self.board.get_size()[0]):
@@ -29,6 +38,12 @@ class TrivialSolver(SolverStrategy):
         return None
 
     def find_potentially_safe_tile(self, revealed_x, revealed_y):
+        """
+        Find a potentiall safe tile in the safe neighbors (+1/-1).
+        revealed_x (int): x-coordinate of revealed tile
+        revealed_y (int): y-coordinate of revealed tile
+        Returns tuple or None - Coordinates of potentially safe tile or None if no unrevealed tile
+        """
         size_x, size_y = self.board.get_size()
         potentially_safe_tiles = []
 
@@ -60,6 +75,7 @@ class TrivialSolver(SolverStrategy):
                 return None # no safe tile found
 
     def solve(self):
+        """ Solve the game using the trivial solver strategy. """
         print("In TrivialSolver solve()")
         tile = self.select_random_tile()
         while tile:

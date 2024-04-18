@@ -70,7 +70,7 @@ class AdvancedSolver(SolverStrategy):
         y (int): y-coordinate of the cell
         Returns int - Number of flags around the space
         """
-        print("In count_flags_around")
+        #print("In count_flags_around")
         count = 0
         for dx in [-1, 0, 1]:
             for dy in [-1, 0, 1]:
@@ -90,7 +90,7 @@ class AdvancedSolver(SolverStrategy):
         y (int): y-coordinate of the space
         Returns list - List of hidden tiles around the space
         """
-        print("In find_hidden_tiles_around")
+        #print("In find_hidden_tiles_around")
         hidden_tiles = []
         for dx in [-1, 0, 1]:
             for dy in [-1, 0, 1]:
