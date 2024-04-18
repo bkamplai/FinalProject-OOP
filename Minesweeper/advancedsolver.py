@@ -1,14 +1,21 @@
 from solverstrategy import SolverStrategy
-import random
 
 class AdvancedSolver(SolverStrategy):
     def __init__(self, board):
+        """
+        Initialize the AdvancedSolver.
+        board (Board): The game board
+        """
         self.board = board
-        self.safe_squares_to_probe = []
-        self.mines_identified = []
-        self.flags_placed = 0
+        self.safe_squares_to_probe = [] # List of safe squares to investigate
+        self.mines_identified = [] # List of identified mines
+        self.flags_placed = 0 # Counter for flags placed (display)
 
     def flag_mines(self):
+        """
+        Flag mines based on evaluation of neighboring spaces.
+        Returns bool - True is mines were flagged, False otherwise
+        """
         mines_flagged = False
         for x in range(self.board.get_size()[0]):
             for y in range(self.board.get_size()[1]):
@@ -31,6 +38,11 @@ class AdvancedSolver(SolverStrategy):
         return mines_flagged
 
     def evaluate_border_cells(self, border_cells):
+        """
+        Evaluate the border cells to identify safe squares to probe
+        border_cells (list): List of border cells to evaluate
+        Returns bool - True is changes were made, False otherwise
+        """
         changes_made = False
         print("Evaluating border cells: ", border_cells)
         for x, y in border_cells:
@@ -52,6 +64,12 @@ class AdvancedSolver(SolverStrategy):
         return changes_made or self.flag_mines()
 
     def count_flags_around(self, x, y):
+        """
+        Count the number of flags around a given cell.
+        x (int): x-coordinate of the cell
+        y (int): y-coordinate of the cell
+        Returns int - Number of flags around the space
+        """
         print("In count_flags_around")
         count = 0
         for dx in [-1, 0, 1]:
@@ -66,6 +84,12 @@ class AdvancedSolver(SolverStrategy):
         return count
     
     def find_hidden_tiles_around(self, x, y):
+        """
+        Find hidden tiles around a given space.
+        x (int): x-coordinate of the space
+        y (int): y-coordinate of the space
+        Returns list - List of hidden tiles around the space
+        """
         print("In find_hidden_tiles_around")
         hidden_tiles = []
         for dx in [-1, 0, 1]:
@@ -80,10 +104,18 @@ class AdvancedSolver(SolverStrategy):
         return hidden_tiles
 
     def is_valid_coord(self, x, y):
-        #print("in is_valid_coord")
+        """
+        Check if a given coordinate is valid.
+        x (int): x-coordinate
+        y (int): y-coordiante
+        Returns bool - True if coordinate is valid, False otherwise
+        """
         return 0 <= x < self.board.get_size()[0] and 0 <= y < self.board.get_size()[1]
 
     def solve(self):
+        """
+        Solve the game using the advanced solver strategy.
+        """
         print("Solving with AdvancedSolver")
         while True:
             border_cells = self.find_border_cells()
@@ -101,9 +133,17 @@ class AdvancedSolver(SolverStrategy):
             self.act_on_findings()
     
     def get_flags_placed(self):
+        """
+        Get the number of flags placed by the solver (display).
+        Returns int - Number of flags placed
+        """
         return self.flags_placed
 
     def find_border_cells(self):
+        """
+        Find border cells on the game board.
+        Returns list - List of border cells (immediate neighbors)
+        """
         border_cells = []
         for x in range(self.board.get_size()[0]):
             for y in range(self.board.get_size()[1]):
@@ -112,6 +152,12 @@ class AdvancedSolver(SolverStrategy):
         return border_cells
     
     def is_border_cell(self, x, y):
+        """
+        Check if a given cell is a border cell.
+        x (int): x-coordinate of the cell
+        y (int): y-coordinate of the cell
+        Returns bool - True if the cell is a border cell, False otherwise
+        """
         cell = self.board.get_piece((x, y))
         if cell.get_clicked():
             return False
@@ -128,6 +174,9 @@ class AdvancedSolver(SolverStrategy):
         return False
 
     def act_on_findings(self):
+        """
+        Flag or reveal mines based on the findings of the solver.
+        """
         print("In act_on_findings")
         # Reveal safe squares
         for mine_coords in self.mines_identified:
