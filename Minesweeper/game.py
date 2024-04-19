@@ -1,6 +1,6 @@
 import pygame
 from board import Board 
-from solver import Solver
+#from solver import Solver
 from time import sleep
 from renderer import Renderer
 from initializingstate import InitializingState
@@ -26,7 +26,7 @@ class Game:
         self.state = InitializingState(self)
         self.initial_draw()
         self.solver_interface = SolverInterface(self.board)
-        self.solver_interface.set_solver('trivial')
+        #self.solver_interface.set_solver('trivial')
 
 
     def run_solver(self):
@@ -34,7 +34,7 @@ class Game:
         Run the solver to automatically play the game.
         """
         if isinstance(self.state, PlayingState):
-            #self.solver_interface.set_solver('trivial')
+            self.solver_interface.set_solver('trivial')
             self.solver_interface.solve()
 
             current_flag_count = self.board.count_flags()
