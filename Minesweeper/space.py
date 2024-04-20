@@ -1,4 +1,5 @@
-from typing import List, Self
+from typing import List
+
 
 class Space:
     # States: Has bomb, clicked, flagged
@@ -7,21 +8,21 @@ class Space:
         self.around: int = 0
         self.clicked: bool = False
         self.flagged: bool = False
-        self.neighbors: List[Self] = []
+        self.neighbors: List["Space"] = []
 
     def __str__(self) -> str:
         return str(self.has_bomb)
 
-    def get_num_around(self) ->int:
+    def get_num_around(self) -> int:
         return self.around
 
-    def get_has_bomb(self) ->bool:
+    def get_has_bomb(self) -> bool:
         return self.has_bomb
 
-    def get_clicked(self) ->bool:
+    def get_clicked(self) -> bool:
         return self.clicked
 
-    def get_flagged(self) ->bool:
+    def get_flagged(self) -> bool:
         return self.flagged
 
     def toggle_flag(self) -> None:
@@ -31,17 +32,16 @@ class Space:
         self.clicked = True
 
     def set_num_around(self) -> None:
-        num = 0
+        num: int = 0
         for neighbor in self.neighbors:
             if neighbor.get_has_bomb():
                 num += 1
-                #print("Neighbor with Mine found")
+                # print("Neighbor with Mine found")
         self.around = num
-       #print(f"Setting num_around: {self.around} for Space")
+        # print(f"Setting num_around: {self.around} for Space")
 
-    def set_neighbors(self, neighbors: int) ->None:
+    def set_neighbors(self, neighbors: List["Space"]) -> None:
         self.neighbors = neighbors
-        
-    def get_neighbors(self) ->int:
+
+    def get_neighbors(self) -> List["Space"]:
         return self.neighbors
- 
