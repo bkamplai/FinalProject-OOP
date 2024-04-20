@@ -15,24 +15,29 @@ class AdvancedSolver(SolverStrategy):
         Returns bool - True if mines were flagged, False otherwise
         """
         mines_flagged = False
+        flag_count = self.board.count_flags()
+        max_flags = self.board.get_total_mine_count()
+
         for x in range(self.board.get_size()[0]):
             for y in range(self.board.get_size()[1]):
                 cell = self.board.get_piece((x, y))
-                if not cell.get_clicked(): # skip already revealed cells
+                if not cell.get_clicked() or cell.get_flagged(): # skip already revealed cells
                     continue
                 num_around = cell.get_num_around()
                 flags_around = self.count_flags_around(x, y)
                 hidden_tiles = self.find_hidden_tiles_around(x, y)
 
                 # Flagging condition
-                if num_around - flags_around == len(hidden_tiles):
+                if num_around - flags_around == len(hidden_tiles) and flag_count < max_flags:
                     for hidden in hidden_tiles:
                         hidden_cell = self.board.get_piece(hidden)
-                        if not hidden_cell.get_flagged():
+                        if not hidden_cell.get_flagged() and flag_count < max_flags:
                             print(f"Flagging mine at: {hidden}")
                             self.board.handle_click(hidden_cell, True)
                             mines_flagged = True
                             self.flags_placed += 1
+                            if flag_count >= max_flags:
+                                return mines_flagged
         return mines_flagged
 
     def evaluate_border_cells(self, border_cells):

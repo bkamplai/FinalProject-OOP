@@ -91,17 +91,21 @@ class Board:
         piece (Space): The piece that was clicked
         flag (bool): Was the click a flag?
         """
+        #if self.get_lost():
+            #print("OOPS ALREADY LOST")
+            #return
         if piece.get_clicked() or (piece.get_flagged() and not flag):
             return
         if flag:
             piece.toggle_flag()
             return
         piece.handle_click()
-        if piece.get_num_around() == 0:
-            for neighbor in piece.get_neighbors():
-                self.handle_click(neighbor, False)
         if piece.get_has_bomb():
             self.lost = True
+        elif piece.get_num_around() == 0:
+            for neighbor in piece.get_neighbors():
+                self.handle_click(neighbor, False)
+
         else:
             self.won = self.check_won()
     
