@@ -43,6 +43,8 @@ class Game:
                 self.board.reveal_all_non_flagged_squares()
                 if self.board.check_won():
                     self.change_state(GameOverState(self, win=True))
+                else:
+                    self.change_state(GameOverState(self, win=False))
                 return
 
             if self.shouldSwitchSolver():
@@ -89,16 +91,14 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-                elif event.type == pygame.MOUSEBUTTONDOWN:
+                elif event.type == pygame.MOUSEBUTTONDOWN and not self.board.get_lost():
                     self.state.handle_click(pygame.mouse.get_pos())                
                 elif event.type == pygame.KEYDOWN:
                     if self.board.initialized and not self.board.get_lost():
                         self.solver.move()
             #print("ABOUT TO CALL RUN_SOLVER()")
             self.run_solver()
-            #flags_placed = self.solver_interface.get_flags_placed()
             self.state.update()
-            #self.renderer.draw_board(self.board, flags_placed=flags_placed)
             self.renderer.update_display()
 
             if self.board.get_lost():
@@ -112,6 +112,7 @@ class Game:
 
             #pygame.time.wait(5000) # Causes a pause on everything until game is over
 
+        print("Calling pyamge quit")
         pygame.quit()
 
     def convert_pixel_to_grid(self, pixel_position):

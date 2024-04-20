@@ -77,11 +77,17 @@ class TrivialSolver(SolverStrategy):
     def solve(self):
         """ Solve the game using the trivial solver strategy. """
         print("In TrivialSolver solve()")
+        if self.board.get_lost():
+            print("TRIVIAL SOLVER GAME OVER")
+            return
         tile = self.select_random_tile()
         while tile:
             print(f"Attempting to reveal tile at {tile}")
             piece = self.board.get_piece(tile)
             self.board.handle_click(piece, False)
+            #if self.board.get_lost():
+                #print("MINE WAS REVEALED. GAME OVER IN TRIVIAL")
+                #break
 
             if piece.get_num_around() == 0:
                 print("Revealed an empty space, board should auto-reveal tiles")

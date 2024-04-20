@@ -38,6 +38,9 @@ class AdvancedSolver(SolverStrategy):
                             self.flags_placed += 1
                             if flag_count >= max_flags:
                                 return mines_flagged
+                            #if self.board.get_lost():
+                                #print("MINE WAS REVEALED. GAME OVER.")
+                                #return mines_flagged
         return mines_flagged
 
     def evaluate_border_cells(self, border_cells):
@@ -63,6 +66,9 @@ class AdvancedSolver(SolverStrategy):
                         print(f"Adding safe square to probe: {hidden}")
                         self.safe_squares_to_probe.append(hidden)
                         changes_made = True
+                        #if self.board.get_lost():
+                            #print("MINE WAS REVEALED. GAME OVER IN BORDER CELL.")
+                            #return True
         
         return changes_made or self.flag_mines()
 
@@ -108,6 +114,9 @@ class AdvancedSolver(SolverStrategy):
         """ Solve the board using Advanced Solver strategy. """
         print("Solving with AdvancedSolver")
         while True:
+            if self.board.get_lost():
+                print("GAME OVER ADVANCED SOLVER")
+                return
             border_cells = self.find_border_cells()
             if not border_cells:
                 print("No border cells to evaluate. Solver may be stuck or the puzzle is solved.")
@@ -160,7 +169,7 @@ class AdvancedSolver(SolverStrategy):
             mine_cell = self.board.get_piece(mine_coords)
             if not mine_cell.get_flagged():
                 print(f"Flagging tile at {mine_coords}")
-                self.board.handle_click(mine_cell, True)
+                self.board.handle_click(mine_cell, True) # FLAGGING FROM HERE TOO = PROBLEM!!
                 self.flags_placed += 1
 
         for square_coords in self.safe_squares_to_probe:

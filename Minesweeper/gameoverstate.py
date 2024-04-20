@@ -20,6 +20,10 @@ class GameOverState(State):
     def enter(self):
         """ Enter the Game Over State. """
         print("Entering GameOverState")
+        if self.win:
+            print("Congratulations!")
+        else:
+            print("Ouch!")
         self.update()
 
     def exit(self):
