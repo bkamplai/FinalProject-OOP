@@ -35,7 +35,8 @@ class Space:
 
     def toggle_flag(self) -> None:
         """ Tottle the flagged state of the space. """
-        self.flagged = not self.flagged
+        if not self.clicked:
+            self.flagged = not self.flagged
 
     def handle_click(self) -> None:
         """ Setter for clicked. """
