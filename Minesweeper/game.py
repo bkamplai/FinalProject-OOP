@@ -61,7 +61,7 @@ class Game:
         Do we need a new strategy?
         Call the function in board to see if condition for advancedSolver is met
         """
-        return self.board.isBoardOpened()
+        return self.board.is_board_opened()
 
     def initial_draw(self):
         """

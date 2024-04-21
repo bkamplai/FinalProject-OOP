@@ -161,7 +161,7 @@ class Board:
             for colIndex, piece in enumerate(row):
                 piece.set_num_around()
 
-    def isBoardOpened(self):
+    def is_board_opened(self):
         """ 
         Check to see if the space that was selected opened up the board.
         Returns bool - True is board is fully opnened, False otherwise """
