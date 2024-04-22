@@ -253,8 +253,8 @@ class TestAdvancedSolver(unittest.TestCase):
         self.solver.evaluate_border_cells = MagicMock(return_value=False)
         self.solver.flag_mines = MagicMock(side_effect=[True, False])
 
-        expected_message = "No more certain moves to make. The solver is \
-            either stuck or the puzzle is solved."
+        expected_message = "No more certain moves to make. The solver is " + \
+            "either stuck or the puzzle is solved."
         with patch('builtins.print') as mock_print:
             self.solver.solve()
             mock_print.assert_called_with(expected_message)
