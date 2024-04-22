@@ -36,6 +36,7 @@ class AdvancedSolver(SolverStrategy):
                             self.board.handle_click(hidden_cell, True)
                             mines_flagged = True
                             self.flags_placed += 1
+                            flag_count += 1
                             if flag_count >= max_flags:
                                 return mines_flagged
                             #if self.board.get_lost():
