@@ -1,5 +1,5 @@
 MAIN = main.py
-TESTS = Tests/test_space.py Tests/test_board.py Tests/test_game.py Tests/test_initializingstate.py Tests/test_playingstate.py Tests/test_state.py Tests/test_solver.py Tests/test_renderer.py Tests/test_advancedsolver.py
+TESTS = Tests/test_space.py Tests/test_board.py Tests/test_game.py Tests/test_initializingstate.py Tests/test_playingstate.py Tests/test_state.py Tests/test_solver.py Tests/test_renderer.py Tests/test_advancedsolver.py Tests/test_gameoverstate.py
 PY = python3
 
 # target and its dependencies followed by commands
