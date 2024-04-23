@@ -1,5 +1,6 @@
 from solverstrategy import SolverStrategy
 import random
+import logging
 
 class TrivialSolver(SolverStrategy):
     def __init__(self, board):
@@ -9,6 +10,11 @@ class TrivialSolver(SolverStrategy):
         """
         self.board = board
         self.flags_placed = 0
+        self.logger = logging.getLogger('trivialsolver')
+        self.logger.setLevel(logging.INFO)
+        handler = logging.StreamHandler()
+        handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+        self.logger.addHandler(handler)
 
     def get_flags_placed(self):
         """ Return the number of flags placed by the solver (display)"""
@@ -76,13 +82,13 @@ class TrivialSolver(SolverStrategy):
 
     def solve(self):
         """ Solve the game using the trivial solver strategy. """
-        print("In TrivialSolver solve()")
+        self.logger.info("In TrivialSolver solve()")
         if self.board.get_lost():
-            print("TRIVIAL SOLVER GAME OVER")
+            self.logger.info("TRIVIAL SOLVER GAME OVER")
             return
         tile = self.select_random_tile()
         while tile:
-            print(f"Attempting to reveal tile at {tile}")
+            self.logger.info(f"Attempting to reveal tile at {tile}")
             piece = self.board.get_piece(tile)
             self.board.handle_click(piece, False)
             #if self.board.get_lost():
@@ -90,14 +96,14 @@ class TrivialSolver(SolverStrategy):
                 #break
 
             if piece.get_num_around() == 0:
-                print("Revealed an empty space, board should auto-reveal tiles")
+                self.logger.info("Revealed an empty space, board should auto-reveal tiles")
                 break
 
             # If the tile is a number:
             safe_tile = self.find_potentially_safe_tile(*tile)
             if safe_tile:
-                print(f"Found potentially safe tile at {safe_tile}, attempting to reveal")
+                self.logger.info(f"Found potentially safe tile at {safe_tile}, attempting to reveal")
                 tile = safe_tile
             else:
-                print("No additional safe move was found, stopping solver.")
+                self.logger.info("No additional safe move was found, stopping solver.")
                 break
