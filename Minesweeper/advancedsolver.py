@@ -1,36 +1,55 @@
 from solverstrategy import SolverStrategy
-import random
+#import random
 
 class AdvancedSolver(SolverStrategy):
     def __init__(self, board):
+        """ Initialize the Advanced Solver. """
         self.board = board
         self.safe_squares_to_probe = []
         self.mines_identified = []
         self.flags_placed = 0
 
     def flag_mines(self):
+        """
+        Determine if you can flag any spaces based on neighboring spaces.
+        Returns bool - True if mines were flagged, False otherwise
+        """
         mines_flagged = False
+        flag_count = self.board.count_flags()
+        max_flags = self.board.get_total_mine_count()
+
         for x in range(self.board.get_size()[0]):
             for y in range(self.board.get_size()[1]):
                 cell = self.board.get_piece((x, y))
-                if not cell.get_clicked(): # skip already revealed cells
+                if not cell.get_clicked() or cell.get_flagged(): # skip already revealed cells
                     continue
                 num_around = cell.get_num_around()
                 flags_around = self.count_flags_around(x, y)
                 hidden_tiles = self.find_hidden_tiles_around(x, y)
 
                 # Flagging condition
-                if num_around - flags_around == len(hidden_tiles):
+                if num_around - flags_around == len(hidden_tiles) and flag_count < max_flags:
                     for hidden in hidden_tiles:
                         hidden_cell = self.board.get_piece(hidden)
-                        if not hidden_cell.get_flagged():
+                        if not hidden_cell.get_flagged() and flag_count < max_flags:
                             print(f"Flagging mine at: {hidden}")
                             self.board.handle_click(hidden_cell, True)
                             mines_flagged = True
                             self.flags_placed += 1
+                            flag_count += 1
+                            if flag_count >= max_flags:
+                                return mines_flagged
+                            #if self.board.get_lost():
+                                #print("MINE WAS REVEALED. GAME OVER.")
+                                #return mines_flagged
         return mines_flagged
 
     def evaluate_border_cells(self, border_cells):
+        """
+        Try to identify safe squares to probe.
+        border_cells (list): List of border cells to evaluate
+        Returns bool - True if changes were made, False otherwise
+        """
         changes_made = False
         print("Evaluating border cells: ", border_cells)
         for x, y in border_cells:
@@ -48,11 +67,18 @@ class AdvancedSolver(SolverStrategy):
                         print(f"Adding safe square to probe: {hidden}")
                         self.safe_squares_to_probe.append(hidden)
                         changes_made = True
+                        #if self.board.get_lost():
+                            #print("MINE WAS REVEALED. GAME OVER IN BORDER CELL.")
+                            #return True
         
         return changes_made or self.flag_mines()
 
     def count_flags_around(self, x, y):
-        print("In count_flags_around")
+        """
+        Count the number of flags around a given space.
+        Returns int - number of flags around the space
+        """
+        #print("In count_flags_around")
         count = 0
         for dx in [-1, 0, 1]:
             for dy in [-1, 0, 1]:
@@ -66,7 +92,8 @@ class AdvancedSolver(SolverStrategy):
         return count
     
     def find_hidden_tiles_around(self, x, y):
-        print("In find_hidden_tiles_around")
+        """ Get a list of hidden tiles around the space """
+        #print("In find_hidden_tiles_around")
         hidden_tiles = []
         for dx in [-1, 0, 1]:
             for dy in [-1, 0, 1]:
@@ -80,12 +107,17 @@ class AdvancedSolver(SolverStrategy):
         return hidden_tiles
 
     def is_valid_coord(self, x, y):
+        """ Check if a given coordinate is valid."""
         #print("in is_valid_coord")
         return 0 <= x < self.board.get_size()[0] and 0 <= y < self.board.get_size()[1]
 
     def solve(self):
+        """ Solve the board using Advanced Solver strategy. """
         print("Solving with AdvancedSolver")
         while True:
+            if self.board.get_lost():
+                print("GAME OVER ADVANCED SOLVER")
+                return
             border_cells = self.find_border_cells()
             if not border_cells:
                 print("No border cells to evaluate. Solver may be stuck or the puzzle is solved.")
@@ -101,9 +133,11 @@ class AdvancedSolver(SolverStrategy):
             self.act_on_findings()
     
     def get_flags_placed(self):
+        """ Get the number of flags placed by the solver (display)"""
         return self.flags_placed
 
     def find_border_cells(self):
+        """ Find border cells on board (immediate neighbors) """
         border_cells = []
         for x in range(self.board.get_size()[0]):
             for y in range(self.board.get_size()[1]):
@@ -112,6 +146,7 @@ class AdvancedSolver(SolverStrategy):
         return border_cells
     
     def is_border_cell(self, x, y):
+        """ Check to see if a given space is a border space. """
         cell = self.board.get_piece((x, y))
         if cell.get_clicked():
             return False
@@ -128,13 +163,14 @@ class AdvancedSolver(SolverStrategy):
         return False
 
     def act_on_findings(self):
+        """ Reveal spaces or place flags after evaluating border cells. """
         print("In act_on_findings")
         # Reveal safe squares
         for mine_coords in self.mines_identified:
             mine_cell = self.board.get_piece(mine_coords)
             if not mine_cell.get_flagged():
                 print(f"Flagging tile at {mine_coords}")
-                self.board.handle_click(mine_cell, True)
+                self.board.handle_click(mine_cell, True) # FLAGGING FROM HERE TOO = PROBLEM!!
                 self.flags_placed += 1
 
         for square_coords in self.safe_squares_to_probe:

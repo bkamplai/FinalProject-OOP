@@ -16,6 +16,7 @@ class TestGame(unittest.TestCase):
         self.game.renderer.piece_size = (160, 160)
         self.game.renderer.screen_size = (800, 100)
         self.game.board = MagicMock()
+        self.game.board.get_lost.return_value = False
     
     def test_run_solver_playing_state(self):
         self.game.state = PlayingState(self.game)

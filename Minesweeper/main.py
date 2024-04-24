@@ -2,6 +2,7 @@ import sys
 from game import Game
 
 def main() -> None:
+    """ Get command line arguments: size x, size y, mine count """
     if len(sys.argv) != 4:
         print("Usage: python3 main.py grid_width grid_height mine_count")
         sys.exit(1)
@@ -18,7 +19,7 @@ def main() -> None:
         sys.exit(1)
 
     size = (grid_width, grid_height)
-    g = Game(size, mine_count)
+    g = Game(size, mine_count) # Create a game with arguments
     g.run()
 
 if __name__ == '__main__':
