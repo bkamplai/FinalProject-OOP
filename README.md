@@ -14,4 +14,21 @@ The game Minesweeper is a quintessential puzzle game that challenges players to 
 * Must document each member’s responsibility for various parts of the projects
   * can use Gant chart, kanban board, etc.
 
- [View the Project Rubric]()
+ [View the Project Rubric](https://coloradomesa365-my.sharepoint.com/:w:/g/personal/rbasnet_coloradomesa_edu/ETP4ldhudzJJlO8kXxb-FfMBxdlXSNzb_OL_LQmJP0rOTA?e=aFiow0)
+
+ ### Judge Scores
+
+| Name | Value |
+| :--- | :--- |
+| Jeremy Bergen | 42/45 |
+| Clayton Johnson | 45/45 |
+| Average Score | 43.5/45 |
+| Self Grade | 45/45 |
+| Justification | All the technical requirements for the project were met. Test coverage reached 99%, OOD concepts were effectively implemented, and 4+1 UML diagrams were complete and thorough. |
+
+### How to Run
+
+### How to Test
+
+
+ 
