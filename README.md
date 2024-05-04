@@ -28,6 +28,41 @@ The game Minesweeper is a quintessential puzzle game that challenges players to 
 
 ### How to Run
 
+### Prerequisites
+
+Before running the Minesweeper solver, ensure you have the following installed on your system:
+
+- Python 3.x ([Download Python](https://www.python.org/))
+- Pygame library ([Pygame Official Website](https://www.pygame.org/))
+
+### Installation
+
+1. Clone the Minesweeper solver repository from GitHub:
+git clone <repository_url>
+
+2. Navigate to the directory containing the cloned repository:
+cd <repository_directory>
+3. Install the required dependencies using pip:
+pip install -r requirements.txt
+### Running the Program
+
+To run the Minesweeper solver, follow these steps:
+
+1. Open a terminal or command prompt.
+
+2. Navigate to the directory containing the Minesweeper solver files.
+
+3. Run the following command, replacing `<width>`, `<height>`, and `<mines>` with your desired values:
+python minesweeper_solver.py <width> <height> <mines>
+
+Example:
+python minesweeper_solver.py 10 10 15
+
+This command will launch the Minesweeper solver with the specified dimensions and number of mines.
+
+
+
+
 ### How to Test
 
 
