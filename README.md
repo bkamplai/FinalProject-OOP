@@ -32,7 +32,7 @@ The game Minesweeper is a quintessential puzzle game that challenges players to 
 
 Before running the Minesweeper solver, ensure you have the following installed on your system:
 
-- Python 3.x ([Download Python](https://www.python.org/))
+- Python 3.11 ([Download Python](https://www.python.org/))
 - Pygame library ([Pygame Official Website](https://www.pygame.org/))
 
 ### Installation
