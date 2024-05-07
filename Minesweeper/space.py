@@ -1,4 +1,5 @@
-from typing import List, Self
+from typing import List
+
 
 class Space:
     # States: Has bomb, clicked, flagged
@@ -8,28 +9,28 @@ class Space:
         has_bomb (bool): Does the space contain a mine?
         """
         self.has_bomb: bool = has_bomb
-        self.around: int = 0 # Num of mines around this space
-        self.clicked: bool = False # Space been clicked?
-        self.flagged: bool = False # Space been flagged?
-        self.neighbors: List[Self] = [] # List of neighboring spaces
+        self.around: int = 0  # Num of mines around this space
+        self.clicked: bool = False  # Space been clicked?
+        self.flagged: bool = False  # Space been flagged?
+        self.neighbors: List["Space"] = []  # List of neighboring spaces
 
     def __str__(self) -> str:
         """ Return a string representation of the Space. """
         return str(self.has_bomb)
 
-    def get_num_around(self) ->int:
+    def get_num_around(self) -> int:
         """ Getter for num_around. """
         return self.around
 
-    def get_has_bomb(self) ->bool:
+    def get_has_bomb(self) -> bool:
         """ Getter for has_bomb. """
         return self.has_bomb
 
-    def get_clicked(self) ->bool:
+    def get_clicked(self) -> bool:
         """ Getter for get_clicked. """
         return self.clicked
 
-    def get_flagged(self) ->bool:
+    def get_flagged(self) -> bool:
         """ Getter for get_flagged. """
         return self.flagged
 
@@ -44,19 +45,18 @@ class Space:
 
     def set_num_around(self) -> None:
         """ Setter for num_around. """
-        num = 0
+        num: int = 0
         for neighbor in self.neighbors:
             if neighbor.get_has_bomb():
                 num += 1
-                #print("Neighbor with Mine found")
+                # print("Neighbor with Mine found")
         self.around = num
-       #print(f"Setting num_around: {self.around} for Space")
+        # print(f"Setting num_around: {self.around} for Space")
 
-    def set_neighbors(self, neighbors: int) -> None:
+    def set_neighbors(self, neighbors: List["Space"]) -> None:
         """ Setter for neighbors. """
         self.neighbors = neighbors
-        
-    def get_neighbors(self) ->int:
+
+    def get_neighbors(self) -> List["Space"]:
         """ Getter for neighbors. """
         return self.neighbors
- 

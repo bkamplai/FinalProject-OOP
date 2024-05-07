@@ -1,23 +1,27 @@
+import pygame  # type: ignore
+from typing import Tuple, Any
 from state import State
-import pygame
+
 
 class GameOverState(State):
-    def __init__(self, game, win=False):
+    def __init__(self, game: Any, win: bool = False) -> None:
         super().__init__(game)
-        self.win = win
+        self.win: bool = win
 
-    def handle_click(self, position):
+    def handle_click(self, position: Tuple[int, int]) -> None:
         """ Handle logic to restart the game or quit. """
         pass
 
-    def update(self):
+    def update(self) -> None:
         """ Draw game over screen. """
         pygame.time.wait(5000)
         self.game.renderer.clear_screen()
-        #self.game.renderer.display_message("Game Over! Click to exit.", self.game.renderer.screen_size[0] // 2, 50)
+        # self.game.renderer.display_message(
+        #     "Game Over! Click to exit.",
+        #     self.game.renderer.screen_size[0] // 2, 50)
         self.game.renderer.update_display()
 
-    def enter(self):
+    def enter(self) -> None:
         """ Enter the Game Over State. """
         print("Entering GameOverState")
         if self.win:
@@ -26,6 +30,6 @@ class GameOverState(State):
             print("Ouch!")
         self.update()
 
-    def exit(self):
+    def exit(self) -> None:
         """ Exit the Game Over State. """
         print("Exiting GameOverState")

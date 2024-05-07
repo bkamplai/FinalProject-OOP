@@ -1,18 +1,18 @@
 import unittest
 from unittest.mock import MagicMock, patch, call
-from hypothesis import given, strategies as st
+from hypothesis import given, strategies as st  # type: ignore
 from gameoverstate import GameOverState
 
 
 class TestGameOverState(unittest.TestCase):
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.game = MagicMock()
         self.game.renderer = MagicMock()
         self.game_over_state = GameOverState(self.game, win=False)
 
-    def test_handle_click(self):
-        @given(st.tuples(st.integers(), st.integers()))
+    def test_handle_click(self) -> None:
+        @given(st.tuples(st.integers(), st.integers()))  # type: ignore
         def test(position):  # pragma: no cover
             try:
                 self.game_over_state.handle_click(position)
@@ -21,7 +21,7 @@ class TestGameOverState(unittest.TestCase):
                 assert False
         test()
 
-    def test_update(self):
+    def test_update(self) -> None:
         with patch('pygame.time.wait'), \
              patch.object(self.game.renderer, 'clear_screen'), \
              patch.object(self.game.renderer, 'update_display'):
@@ -29,7 +29,7 @@ class TestGameOverState(unittest.TestCase):
             self.game.renderer.clear_screen.assert_called_once()
             self.game.renderer.update_display.assert_called_once()
 
-    def test_enter(self):
+    def test_enter(self) -> None:
         with patch('builtins.print') as mocked_print:
             win_state = GameOverState(self.game, win=True)
             win_state.enter()
@@ -43,7 +43,7 @@ class TestGameOverState(unittest.TestCase):
             mocked_print.assert_has_calls([call("Entering GameOverState"),
                                            call("Ouch!")])
 
-    def test_exit(self):
+    def test_exit(self) -> None:
         # Test that exiting prints correctly.
         with patch('builtins.print') as mocked_print:
             self.game_over_state.exit()

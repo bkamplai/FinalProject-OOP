@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import MagicMock, patch, call
-from hypothesis import given, strategies as st
+from hypothesis import given, strategies as st  # type: ignore
 from typing import List, Tuple
 from advancedsolver import AdvancedSolver
 from board import Board
@@ -19,7 +19,7 @@ class TestAdvancedSolver(unittest.TestCase):
         self.assertFalse(result)
 
     @given(st.lists(st.tuples(st.integers(0, 9), st.integers(0, 9)),
-                    unique=True))
+                    unique=True))  # type: ignore
     def test_flag_mines_effectiveness(self, mine_positions: List[Tuple[
             int, int]]) -> None:
         self.board.initialize_mines(mine_positions)
@@ -41,13 +41,13 @@ class TestAdvancedSolver(unittest.TestCase):
         result: bool = self.solver.evaluate_border_cells(border_cells)
         self.assertTrue(result)
 
-    def test_evaluate_border_cells_no_change(self):
+    def test_evaluate_border_cells_no_change(self) -> None:
         self.board.initialize_mines([])
         for x in range(10):
             for y in range(10):
                 self.board.get_piece((x, y)).handle_click()
-        border_cells = [(0, 0)]
-        result = self.solver.evaluate_border_cells(border_cells)
+        border_cells: List[Tuple[int, int]] = [(0, 0)]
+        result: bool = self.solver.evaluate_border_cells(border_cells)
         self.assertFalse(result,
                          "No changes should occur as all cells are clicked")
 
@@ -64,7 +64,7 @@ class TestAdvancedSolver(unittest.TestCase):
         count: int = self.solver.count_flags_around(0, 0)
         self.assertEqual(count, 0)
 
-    @given(st.integers(0, 9), st.integers(0, 9))
+    @given(st.integers(0, 9), st.integers(0, 9))  # type: ignore
     def test_count_flags_around_with_flags(self, x: int, y: int) -> None:
         self.board.initialize_mines([(x, y)])
         self.board.get_piece((x, y)).toggle_flag()
@@ -78,7 +78,7 @@ class TestAdvancedSolver(unittest.TestCase):
         count: int = self.solver.count_flags_around(8, 8)
         self.assertEqual(count, 1)
 
-    @given(st.integers(0, 9), st.integers(0, 9))
+    @given(st.integers(0, 9), st.integers(0, 9))  # type: ignore
     def test_find_hidden_tiles_around(self, x: int, y: int) -> None:
         self.board.initialize_mines([])
         hidden_tiles: List[Tuple[int, int]
@@ -104,14 +104,14 @@ class TestAdvancedSolver(unittest.TestCase):
                            ] = self.solver.find_hidden_tiles_around(0, 0)
         self.assertGreater(len(hidden_tiles), 0)
 
-    @given(st.integers(min_value=-10, max_value=20), st.integers(min_value=-10,
-                                                                 max_value=20))
+    @given(st.integers(min_value=-10, max_value=20),
+           st.integers(min_value=-10, max_value=20))  # type: ignore
     def test_is_valid_coord(self, x: int, y: int) -> None:
         result: bool = self.solver.is_valid_coord(x, y)
         self.assertEqual(result, 0 <= x < 10 and 0 <= y < 10)
 
-    def test_stuck_scenario(self):
-        mine_positions = [(0, 0), (0, 1), (9, 9)]
+    def test_stuck_scenario(self) -> None:
+        mine_positions: List[Tuple[int, int]] = [(0, 0), (0, 1), (9, 9)]
         self.board.initialize_mines(mine_positions)
         self.solver.solve()
 
@@ -121,8 +121,8 @@ class TestAdvancedSolver(unittest.TestCase):
         self.assertFalse(self.board.get_lost(),
                          "Game should not be lost due to guessing")
 
-    def test_game_over_handling(self):
-        mine_positions = [(0, 0)]
+    def test_game_over_handling(self) -> None:
+        mine_positions: List[Tuple[int, int]] = [(0, 0)]
         self.board.initialize_mines(mine_positions)
         self.board.handle_click(self.board.get_piece((0, 0)), False)
         self.solver.solve()
@@ -131,13 +131,13 @@ class TestAdvancedSolver(unittest.TestCase):
                         "Game should be recognized as lost")
         self.assertFalse(self.board.get_won(), "Game should not be won")
 
-    def test_flag_mines_no_flags(self):
+    def test_flag_mines_no_flags(self) -> None:
         with patch.object(self.board, 'get_piece',
                           return_value=MagicMock(get_clicked=lambda: False,
                                                  get_flagged=lambda: False)):
             self.assertFalse(self.solver.flag_mines())
 
-    def test_flag_mines_flags_placed(self):
+    def test_flag_mines_flags_placed(self) -> None:
         cell = MagicMock(get_clicked=lambda: True, get_flagged=lambda: False,
                          get_num_around=lambda: 2)
 
@@ -146,7 +146,7 @@ class TestAdvancedSolver(unittest.TestCase):
         hidden_tile2 = MagicMock(get_clicked=lambda: False,
                                  get_flagged=lambda: False)
 
-        def get_piece_side_effect(coord):
+        def get_piece_side_effect(coord: Tuple[int, int]) -> MagicMock:
             if coord == (0, 0):
                 return cell
             elif coord in [(0, 1), (0, 2)]:
@@ -155,7 +155,8 @@ class TestAdvancedSolver(unittest.TestCase):
                 return MagicMock(get_clicked=lambda: False,
                                  get_flagged=lambda: True)
 
-        self.board.get_piece = MagicMock(side_effect=get_piece_side_effect)
+        self.board.get_piece = MagicMock(  # type: ignore
+            side_effect=get_piece_side_effect)
 
         with patch.object(self.board, 'count_flags', return_value=0
                           ) as mock_count_flags, \
@@ -184,29 +185,30 @@ class TestAdvancedSolver(unittest.TestCase):
             print(f"Flag count: {mock_count_flags.return_value}")
             print(f"Max flags: {mock_total_mines.return_value}")
 
-    def test_solve_early_termination_lost(self):
+    def test_solve_early_termination_lost(self) -> None:
         with patch.object(self.board, 'get_lost', return_value=True):
             self.solver.solve()
-            self.assertTrue(self.board.get_lost.called)
+            self.assertTrue(self.board.get_lost.called)  # type: ignore
 
-    def test_get_flags_placed(self):
+    def test_get_flags_placed(self) -> None:
         self.solver.flags_placed = 5
         self.assertEqual(self.solver.get_flags_placed(), 5)
 
-    def test_act_on_findings(self):
+    def test_act_on_findings(self) -> None:
         self.solver.mines_identified = [(1, 1)]
         self.solver.safe_squares_to_probe = [(1, 2)]
         mine_cell = MagicMock(get_flagged=lambda: False)
         safe_cell = MagicMock(get_clicked=lambda: False)
-        self.board.get_piece = MagicMock(
+        self.board.get_piece = MagicMock(  # type: ignore
             side_effect=lambda x: mine_cell if x == (1, 1) else safe_cell)
 
         with patch.object(self.board, 'handle_click') as mock_handle_click:
             self.solver.act_on_findings()
             expected_calls = [((mine_cell, True),), ((safe_cell, False),)]
-            mock_handle_click.assert_has_calls(expected_calls, any_order=True)
+            mock_handle_click.assert_has_calls(expected_calls,  # type: ignore
+                                               any_order=True)
 
-    def test_flag_mines_places_flags_correctly(self):
+    def test_flag_mines_places_flags_correctly(self) -> None:
         cell = MagicMock(get_clicked=lambda: True, get_flagged=lambda: False,
                          get_num_around=lambda: 2)
         hidden_tile1 = MagicMock(get_clicked=lambda: False,
@@ -214,7 +216,7 @@ class TestAdvancedSolver(unittest.TestCase):
         hidden_tile2 = MagicMock(get_clicked=lambda: False,
                                  get_flagged=lambda: False)
 
-        def get_piece_side_effect(coord):
+        def get_piece_side_effect(coord: Tuple[int, int]) -> MagicMock:
             if coord == (0, 0):
                 return cell
             elif coord == (0, 1):
@@ -224,12 +226,15 @@ class TestAdvancedSolver(unittest.TestCase):
             return MagicMock(get_clicked=lambda: True,
                              get_flagged=lambda: True)
 
-        self.board.get_piece = MagicMock(side_effect=get_piece_side_effect)
-        self.board.count_flags = MagicMock(return_value=0)
-        self.board.get_total_mine_count = MagicMock(return_value=10)
-        self.solver.count_flags_around = MagicMock(return_value=0)
-        self.solver.find_hidden_tiles_around = MagicMock(return_value=[(0, 1),
-                                                                       (0, 2)])
+        self.board.get_piece = MagicMock(  # type: ignore
+            side_effect=get_piece_side_effect)
+        self.board.count_flags = MagicMock(return_value=0)  # type: ignore
+        self.board.get_total_mine_count = MagicMock(  # type: ignore
+            return_value=10)
+        self.solver.count_flags_around = MagicMock(  # type: ignore
+            return_value=0)
+        self.solver.find_hidden_tiles_around = MagicMock(  # type: ignore
+            return_value=[(0, 1), (0, 2)])
 
         with patch.object(self.board, 'handle_click',
                           autospec=True) as mock_handle_click:
@@ -241,17 +246,20 @@ class TestAdvancedSolver(unittest.TestCase):
                                                              True)]
             mock_handle_click.assert_has_calls(expected_calls, any_order=True)
 
-    def test_solve_terminates_when_lost(self):
-        self.board.get_lost = MagicMock(return_value=True)
+    def test_solve_terminates_when_lost(self) -> None:
+        self.board.get_lost = MagicMock(return_value=True)  # type: ignore
         with patch('builtins.print') as mock_print:
             self.solver.solve()
             mock_print.assert_called_with("GAME OVER ADVANCED SOLVER")
 
-    def test_solve_continues_when_flags_placed(self):
-        self.board.get_lost = MagicMock(return_value=False)
-        self.solver.find_border_cells = MagicMock(return_value=[(0, 0)])
-        self.solver.evaluate_border_cells = MagicMock(return_value=False)
-        self.solver.flag_mines = MagicMock(side_effect=[True, False])
+    def test_solve_continues_when_flags_placed(self) -> None:
+        self.board.get_lost = MagicMock(return_value=False)  # type: ignore
+        self.solver.find_border_cells = MagicMock(  # type: ignore
+            return_value=[(0, 0)])
+        self.solver.evaluate_border_cells = MagicMock(  # type: ignore
+            return_value=False)
+        self.solver.flag_mines = MagicMock(  # type: ignore
+            side_effect=[True, False])
 
         expected_message = "No more certain moves to make. The solver is " + \
             "either stuck or the puzzle is solved."
@@ -259,31 +267,36 @@ class TestAdvancedSolver(unittest.TestCase):
             self.solver.solve()
             mock_print.assert_called_with(expected_message)
 
-    def test_no_flagging_when_at_max_flags(self):
-        self.board.get_piece = MagicMock(return_value=MagicMock(
-            get_clicked=lambda: True,
-            get_flagged=lambda: False,
-            get_num_around=lambda: 2
-        ))
-        self.board.count_flags = MagicMock(return_value=10)
-        self.board.get_total_mine_count = MagicMock(return_value=10)
-        self.solver.count_flags_around = MagicMock(return_value=0)
-        self.solver.find_hidden_tiles_around = MagicMock(return_value=[(0, 1),
-                                                                       (0, 2)])
+    def test_no_flagging_when_at_max_flags(self) -> None:
+        self.board.get_piece = MagicMock(  # type: ignore
+            return_value=MagicMock(
+                get_clicked=lambda: True,
+                get_flagged=lambda: False,
+                get_num_around=lambda: 2
+            ))
+        self.board.count_flags = MagicMock(return_value=10)  # type: ignore
+        self.board.get_total_mine_count = MagicMock(  # type: ignore
+            return_value=10)
+        self.solver.count_flags_around = MagicMock(  # type: ignore
+            return_value=0)
+        self.solver.find_hidden_tiles_around = MagicMock(  # type: ignore
+            return_value=[(0, 1), (0, 2)])
 
         with patch.object(self.board, 'handle_click') as mock_handle_click:
             result = self.solver.flag_mines()
             self.assertFalse(result)
             mock_handle_click.assert_not_called()
 
-    def test_no_action_possible(self):
-        self.board.get_piece = MagicMock(return_value=MagicMock(
-            get_clicked=lambda: False,
-            get_flagged=lambda: True,
-            get_num_around=lambda: 0
-        ))
-        self.board.count_flags = MagicMock(return_value=10)
-        self.board.get_total_mine_count = MagicMock(return_value=10)
+    def test_no_action_possible(self) -> None:
+        self.board.get_piece = MagicMock(  # type: ignore
+            return_value=MagicMock(
+                get_clicked=lambda: False,
+                get_flagged=lambda: True,
+                get_num_around=lambda: 0
+            ))
+        self.board.count_flags = MagicMock(return_value=10)  # type: ignore
+        self.board.get_total_mine_count = MagicMock(  # type: ignore
+            return_value=10)
 
         result = self.solver.flag_mines()
         self.assertFalse(result)

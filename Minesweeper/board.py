@@ -1,26 +1,28 @@
+from typing import List, Tuple
 from space import Space
 
+
 class Board:
-    def __init__(self, size, mine_count):
+    def __init__(self, size: Tuple[int, int], mine_count: int):
         """
         Initialize the game board.
         size (tuple): Size of the board (rows, columns)
         mine_count (int): Number of mines on the board
         """
-        self.size = size
-        self.board = []
-        self.won = False 
-        self.lost = False
-        self.initialized = False
-        self.mine_count = mine_count
+        self.size: Tuple[int, int] = size
+        self.board: List[List[Space]] = []
+        self.won: bool = False
+        self.lost: bool = False
+        self.initialized: bool = False
+        self.mine_count: int = mine_count
         for row in range(size[0]):
-            row = []
+            new_row: List[Space] = []
             for col in range(size[1]):
-                piece = Space(False) # Initialzie with no mines
-                row.append(piece)
-            self.board.append(row)
+                piece: Space = Space(False)  # Initialzie with no mines
+                new_row.append(piece)
+            self.board.append(new_row)
 
-    def initialize_mines(self, positions):
+    def initialize_mines(self, positions: List[Tuple[int, int]]) -> None:
         """
         Initialize mines on the board.
         positions (list): List of mine positions
@@ -42,42 +44,42 @@ class Board:
         self.initialized = True
         print("Mines placed and initialized")
 
-    def reveal_all_non_flagged_squares(self):
+    def reveal_all_non_flagged_squares(self) -> None:
         """ Reveal unrevealed and unflagged spaces on the board. """
         for row in self.board:
             for space in row:
                 if not space.get_flagged() and not space.get_clicked():
                     self.handle_click(space, False)
 
-    def get_total_mine_count(self):
+    def get_total_mine_count(self) -> int:
         """ Get total number of mines on board. """
         return self.mine_count
 
-    def count_flags(self):
+    def count_flags(self) -> int:
         """ Count number of flags on the board. """
-        flag_count = 0
+        flag_count: int = 0
         for row in self.board:
             for space in row:
                 if space.get_flagged():
                     flag_count += 1
         return flag_count
 
-    def print_board(self):
+    def print_board(self) -> None:
         """ Print the current state of the board. """
         for row in self.board:
             for piece in row:
                 print(piece, end=" ")
             print()
 
-    def get_board(self):
+    def get_board(self) -> List[List[Space]]:
         """ Get the game board. """
         return self.board
 
-    def get_size(self):
+    def get_size(self) -> Tuple[int, int]:
         """ Get the size of the game board. """
         return self.size
-    
-    def get_piece(self, index):
+
+    def get_piece(self, index: Tuple[int, int]) -> Space:
         """
         Get a piece at a given index.
         index (tuple): Index of the piece (space)
@@ -85,7 +87,7 @@ class Board:
         """
         return self.board[index[0]][index[1]]
 
-    def handle_click(self, piece, flag):
+    def handle_click(self, piece: Space, flag: bool) -> None:
         """
         Handle a click on a piece (Space).
         piece (Space): The piece that was clicked
@@ -109,8 +111,8 @@ class Board:
                 self.handle_click(neighbor, False)
         else:
             self.won = self.check_won()
-    
-    def check_won(self):
+
+    def check_won(self) -> bool:
         """ Check if the game has been won. """
         for row in self.board:
             for piece in row:
@@ -118,28 +120,29 @@ class Board:
                     return False
         return True
 
-    def get_won(self):
+    def get_won(self) -> bool:
         """ Has the game been won? """
         return self.won
 
-    def get_lost(self):
+    def get_lost(self) -> bool:
         """ Has the game been lost? """
         return self.lost
 
-    def set_neighbors(self):
+    def set_neighbors(self) -> None:
         """ Set the neighbors for each piece (space) on the board. """
         for row in range(len(self.board)):
             for col in range(len(self.board[0])):
                 piece = self.board[row][col]
-                neighbors = []
+                neighbors: List[Space] = []
                 self.add_to_neighbors_list(neighbors, row, col)
                 piece.set_neighbors(neighbors)
                 # debugging
-                #mines_around = sum(n.has_bomb for n in neighbors)
-                #print(f"Space at ({row},{col}) has {len(neighbors)} neighbors with {mines_around} mines.")
+                # mines_around = sum(n.has_bomb for n in neighbors)
+                # print(f"Space at ({row},{col}) has {len(neighbors)}"
+                #       + f" neighbors with {mines_around} mines.")
 
-    
-    def add_to_neighbors_list(self, neighbors, row, col):
+    def add_to_neighbors_list(self, neighbors: List[Space], row: int, col: int
+                              ) -> None:
         """
         Add neighbord to a list for a given piece (Space).
         neighbors (list): List to store neighbors
@@ -153,16 +156,16 @@ class Board:
                 if r < 0 or r >= self.size[0] or c < 0 or c >= self.size[1]:
                     continue
                 neighbors.append(self.board[r][c])
-        #print(f"Neighbors for ({row},{col}): {len(neighbors)}")
+        # print(f"Neighbors for ({row},{col}): {len(neighbors)}")
 
-    def set_num_around(self):
+    def set_num_around(self) -> None:
         """ Set the number of mines around each piece on the board. """
         for rowIndex, row in enumerate(self.board):
             for colIndex, piece in enumerate(row):
                 piece.set_num_around()
 
-    def is_board_opened(self):
-        """ 
+    def is_board_opened(self) -> bool:
+        """
         Check to see if the space that was selected opened up the board.
         Returns bool - True is board is fully opnened, False otherwise """
         for row in self.board:
@@ -170,4 +173,3 @@ class Board:
                 if space.get_clicked() and space.get_num_around() == 0:
                     return True
         return False
-        
