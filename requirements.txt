@@ -9,3 +9,6 @@ autopep8
 lxml
 requests
 pdoc
+Self
+pygame
+pyautogui
