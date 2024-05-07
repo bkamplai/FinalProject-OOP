@@ -60,10 +60,26 @@ python minesweeper_solver.py 10 10 15
 
 This command will launch the Minesweeper solver with the specified dimensions and number of mines.
 
-
-
-
 ### How to Test
 
+### Prerequisites
 
- 
+Before running the Minesweeper tests, ensure you have the following installed on your system:
+
+- Python 3.11 ([Download Python](https://www.python.org/))
+- Pygame library ([Pygame Official Website](https://www.pygame.org/))
+
+### Running the Tests
+
+To run the Minesweeper tests, follow these steps:
+
+1. Open a terminal or command prompt.
+
+2. Navigate to the Minesweeper solver files directory (don't go too far into the Tests folder).
+
+3. Run one of the following commands:
+
+   - `make` to run all of the tests
+   - `make unittest` to run the unit tests
+   - `make check_types` to run mypy checks on all of the files
+   - `make check_styles` to run flake8 checks on all of files
