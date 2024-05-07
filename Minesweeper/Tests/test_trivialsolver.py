@@ -1,34 +1,36 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from hypothesis import given, strategies as st
+from hypothesis import given, strategies as st  # type: ignore
+from typing import Tuple
 from trivialsolver import TrivialSolver
 
 
 class TestTrivialSolver(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.board = MagicMock()
         self.solver = TrivialSolver(self.board)
         self.board.get_size.return_value = (10, 10)
 
-    def test_find_potentially_safe_tile_no_safe_tiles(self):
+    def test_find_potentially_safe_tile_no_safe_tiles(self) -> None:
         self.board.get_piece.return_value = MagicMock(get_clicked=lambda: True,
                                                       get_flagged=lambda: True)
         result = self.solver.find_potentially_safe_tile(5, 5)
         self.assertIsNone(result)
 
-    @given(st.integers(min_value=0, max_value=9), st.integers(min_value=0,
-                                                              max_value=9))
-    def test_find_potentially_safe_tile_with_hypothesis(self, x, y):
+    @given(st.integers(min_value=0, max_value=9),
+           st.integers(min_value=0, max_value=9))  # type: ignore
+    def test_find_potentially_safe_tile_with_hypothesis(self, x: int, y: int
+                                                        ) -> None:
         self.board.get_piece.return_value = MagicMock(get_clicked=lambda: True,
                                                       get_flagged=lambda:
                                                       False)
         result = self.solver.find_potentially_safe_tile(x, y)
         self.assertIsNone(result)
 
-    def test_get_flags_placed(self):
+    def test_get_flags_placed(self) -> None:
         self.assertEqual(self.solver.get_flags_placed(), 0)
 
-    def test_select_random_tile(self):
+    def test_select_random_tile(self) -> None:
         self.board.get_piece.return_value = MagicMock(get_clicked=lambda:
                                                       False,
                                                       get_flagged=lambda:
@@ -36,15 +38,16 @@ class TestTrivialSolver(unittest.TestCase):
         result = self.solver.select_random_tile()
         self.assertIsNotNone(result)
 
-    def test_solve_method(self):
-        self.solver.select_random_tile = MagicMock(side_effect=[(0, 0), (1, 1),
-                                                                None])
+    def test_solve_method(self) -> None:
+        self.solver.select_random_tile = MagicMock(  # type: ignore
+            side_effect=[(0, 0), (1, 1), None])
         piece_mock_0_0 = MagicMock(get_clicked=lambda: False,
                                    get_num_around=lambda: 0)
         piece_mock_1_1 = MagicMock(get_clicked=lambda: False,
                                    get_num_around=lambda: 1)
 
-        def get_piece_mock(coord):  # pragma: no cover
+        def get_piece_mock(coord: Tuple[int, int]
+                           ) -> MagicMock:  # pragma: no cover
             x, y = coord
             if (x, y) == (0, 0):
                 return piece_mock_0_0
@@ -62,13 +65,13 @@ class TestTrivialSolver(unittest.TestCase):
             print("handle_click call count:", mock_handle_click.call_count)
             self.assertEqual(mock_handle_click.call_count, 1)
 
-    def test_select_random_tile_no_unrevealed_tiles(self):
+    def test_select_random_tile_no_unrevealed_tiles(self) -> None:
         self.board.get_size.return_value = (5, 5)
         self.board.get_piece.return_value.get_clicked.return_value = True
         self.board.get_piece.return_value.get_flagged.return_value = False
         self.assertIsNone(self.solver.select_random_tile())
 
-    def test_select_random_tile_with_unrevealed_tiles(self):
+    def test_select_random_tile_with_unrevealed_tiles(self) -> None:
         self.board.get_size.return_value = (5, 5)
         self.board.get_piece.side_effect = lambda coord: MagicMock(
             get_clicked=lambda: (coord[0] + coord[1]) % 2 == 0,
@@ -77,23 +80,24 @@ class TestTrivialSolver(unittest.TestCase):
         self.assertIn(tile, [(x, y) for x in range(5) for y in range(5) if (
             x + y) % 2 == 1])
 
-    def test_find_potentially_safe_tile_no_safe_tiles2(self):
+    def test_find_potentially_safe_tile_no_safe_tiles2(self) -> None:
         self.board.get_size.return_value = (10, 10)
         self.board.get_piece.return_value.get_clicked.return_value = False
         self.board.get_piece.return_value.get_flagged.return_value = True
         self.assertIsNone(self.solver.find_potentially_safe_tile(5, 5))
 
-    def test_solve_game_over_on_first_tile(self):
+    def test_solve_game_over_on_first_tile(self) -> None:
         self.board.get_lost.return_value = True
         with self.assertLogs('trivialsolver', level='INFO') as cm:
             self.solver.solve()
         self.assertTrue(any(
             "TRIVIAL SOLVER GAME OVER" in message for message in cm.output))
 
-    def test_find_potentially_safe_tile_with_safe_tiles(self):
+    def test_find_potentially_safe_tile_with_safe_tiles(self) -> None:
         detailed_logger = MagicMock()
 
-        def get_piece_mock(coord):  # pragma: no cover
+        def get_piece_mock(coord: Tuple[int, int]
+                           ) -> MagicMock:  # pragma: no cover
             x, y = coord
             mock_tile = MagicMock()
             if (x, y) == (3, 3):
@@ -118,15 +122,17 @@ class TestTrivialSolver(unittest.TestCase):
 
         self.assertEqual(result, (3, 3), f"Expected (3, 3), but got {result}")
 
-    def test_solve_game_already_lost(self):
+    def test_solve_game_already_lost(self) -> None:
         self.board.get_lost.return_value = True
         with self.assertLogs('trivialsolver', level='INFO') as log:
             self.solver.solve()
             self.assertIn("TRIVIAL SOLVER GAME OVER", log.output[1])
 
-    def test_solve_no_additional_safe_moves_found(self):
-        self.solver.select_random_tile = MagicMock(return_value=(3, 3))
-        self.solver.find_potentially_safe_tile = MagicMock(return_value=None)
+    def test_solve_no_additional_safe_moves_found(self) -> None:
+        self.solver.select_random_tile = MagicMock(  # type: ignore
+            return_value=(3, 3))
+        self.solver.find_potentially_safe_tile = MagicMock(  # type: ignore
+            return_value=None)
         self.board.get_lost.return_value = False
         mock_piece = MagicMock(get_num_around=lambda: 1,
                                get_clicked=lambda: False,
@@ -141,8 +147,9 @@ class TestTrivialSolver(unittest.TestCase):
                         log.output)
             self.assertTrue(found, "Expected log message not found in output.")
 
-    def test_solve_reveal_empty_tile(self):
-        self.solver.select_random_tile = MagicMock(return_value=(3, 3))
+    def test_solve_reveal_empty_tile(self) -> None:
+        self.solver.select_random_tile = MagicMock(  # type: ignore
+            return_value=(3, 3))
         self.board.get_lost.return_value = False
         self.board.get_piece.side_effect = lambda coord: MagicMock(
             get_num_around=lambda: 0, get_clicked=lambda: False,
@@ -157,9 +164,9 @@ class TestTrivialSolver(unittest.TestCase):
                         log.output)
             self.assertTrue(found, "Expected log message not found in output.")
 
-    def test_solve_continuous_safe_tile_revelation(self):
-        self.solver.select_random_tile = MagicMock()
-        self.solver.find_potentially_safe_tile = MagicMock()
+    def test_solve_continuous_safe_tile_revelation(self) -> None:
+        self.solver.select_random_tile = MagicMock()  # type: ignore
+        self.solver.find_potentially_safe_tile = MagicMock()  # type: ignore
         self.board.get_lost.return_value = False
 
         tile_sequence = [(5, 5), (6, 6), (7, 7)]
