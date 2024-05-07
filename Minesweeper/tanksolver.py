@@ -1,5 +1,6 @@
 from solverstrategy import SolverStrategy
 
+
 class TankSolver(SolverStrategy):
-    def solve(self, board):
+    def solve(self) -> None:
         pass

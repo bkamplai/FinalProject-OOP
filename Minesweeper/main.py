@@ -21,8 +21,8 @@ def main() -> None:
         print("Invalid input:", e)
         sys.exit(1)
 
-    size = (grid_width, grid_height)
-    g = Game(size, mine_count) # Create a game with arguments
+    size: Tuple[int, int] = (grid_width, grid_height)
+    g = Game(size, mine_count)  # Create a game with arguments
     g.run()
 
 

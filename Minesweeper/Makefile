@@ -1,4 +1,4 @@
-MAIN = main.py
+MAIN = SolverInterface.py advancedsolver.py board.py game.py gameoverstate.py initializingstate.py main.py playingstate.py renderer.py solver.py solverstrategy.py space.py state.py tanksolver.py trivialsolver.py
 TESTS = Tests/test_space.py Tests/test_board.py Tests/test_game.py Tests/test_initializingstate.py Tests/test_playingstate.py Tests/test_state.py Tests/test_solver.py Tests/test_renderer.py Tests/test_advancedsolver.py Tests/test_gameoverstate.py Tests/test_solverInterface.py Tests/test_solverstrategy.py Tests/test_tanksolver.py Tests/test_trivialsolver.py
 PY = python3
 
@@ -16,11 +16,11 @@ unittest_pytest:
 	pytest -v --hypothesis-show-statistics --hypothesis-seed=100 --cov --cov-report term $(TESTS)
 
 check_types:
-	mypy --disallow-untyped-defs --strict main.py board.py game.py renderer.py solver.py space.py
+	mypy --disallow-untyped-defs --strict $(MAIN)
 	mypy --disallow-untyped-defs --strict $(TESTS)
 
 check_style:
-	flake8 board.py game.py main.py renderer.py solver.py space.py --count --show-source --statistics
+	flake8 $(MAIN) --count --show-source --statistics
 	flake8 $(TESTS) --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 	flake8 --count --show-source --statistics .
 

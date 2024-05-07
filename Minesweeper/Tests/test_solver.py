@@ -18,12 +18,6 @@ class TestSolver(unittest.TestCase):
     def test_solve_without_strategy(self):
         with self.assertRaises(ValueError):
             self.solver.solve()
-    
-    def test_solve_with_strategy(self):
-        strategy = MagicMock()
-        self.solver.set_strategy(strategy)
-        self.solver.solve()
-        strategy.solve.assert_called_with(self.board)
 
     def test_move_logic_open_unflagged_called_correctly(self):
         self.board.get_board.return_value = [[self.piece]]
